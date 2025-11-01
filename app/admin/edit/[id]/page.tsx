@@ -1,13 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import dynamic from 'next/dynamic'
 
-// Lazy load SimpleMDE to avoid SSR issues
-const SimpleMDE = dynamic(() => import('react-simplemde-editor'), { ssr: false })
-import 'easymde/dist/easymde.min.css'
+// Import easymde CSS only on client side
+if (typeof window !== 'undefined') {
+  require('easymde/dist/easymde.min.css')
+}
+
+let EasyMDE: any = null
+if (typeof window !== 'undefined') {
+  EasyMDE = require('easymde')
+}
 
 const categories = ['移住・生活', 'キャリア・ビジネス', '金融・投資', '税務・法令', '文化・社会', 'データ分析']
 
@@ -15,6 +20,8 @@ export default function EditPostPage() {
   const router = useRouter()
   const params = useParams()
   const postId = params.id as string
+  const editorRef = useRef<HTMLTextAreaElement>(null)
+  const editorInstance = useRef<any>(null)
 
   const [formData, setFormData] = useState({
     title: '',
@@ -33,6 +40,38 @@ export default function EditPostPage() {
   useEffect(() => {
     fetchPost()
   }, [postId])
+
+  useEffect(() => {
+    if (editorRef.current && EasyMDE && !editorInstance.current) {
+      editorInstance.current = new EasyMDE({
+        element: editorRef.current,
+        placeholder: 'Markdown形式で記事を書いてください...',
+        spellChecker: false,
+        status: false,
+      })
+      
+      editorInstance.current.codemirror.on('change', () => {
+        const value = editorInstance.current.value()
+        setFormData(prev => ({ ...prev, content: value }))
+      })
+    }
+
+    return () => {
+      if (editorInstance.current) {
+        editorInstance.current.toTextArea()
+        editorInstance.current = null
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (editorInstance.current && formData.content && !loading) {
+      const currentContent = editorInstance.current.value()
+      if (currentContent !== formData.content) {
+        editorInstance.current.value(formData.content)
+      }
+    }
+  }, [formData.content, loading])
 
   const fetchPost = async () => {
     try {
@@ -344,14 +383,10 @@ export default function EditPostPage() {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             本文（Markdown形式） <span className="text-red-500">*</span>
           </label>
-          <SimpleMDE
-            value={formData.content}
-            onChange={(value) => setFormData({ ...formData, content: value })}
-            options={{
-              placeholder: 'Markdown形式で記事を書いてください...',
-              spellChecker: false,
-              status: false,
-            }}
+          <textarea
+            ref={editorRef}
+            defaultValue={formData.content}
+            className="w-full min-h-[400px]"
           />
         </div>
 

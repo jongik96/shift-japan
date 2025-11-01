@@ -1,18 +1,26 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import dynamic from 'next/dynamic'
 
-// Lazy load SimpleMDE to avoid SSR issues
-const SimpleMDE = dynamic(() => import('react-simplemde-editor'), { ssr: false })
-import 'easymde/dist/easymde.min.css'
+// Import easymde CSS only on client side
+if (typeof window !== 'undefined') {
+  require('easymde/dist/easymde.min.css')
+}
+
+let EasyMDE: any = null
+if (typeof window !== 'undefined') {
+  EasyMDE = require('easymde')
+}
 
 const categories = ['移住・生活', 'キャリア・ビジネス', '金融・投資', '税務・法令', '文化・社会', 'データ分析']
 
 export default function NewPostPage() {
   const router = useRouter()
+  const editorRef = useRef<HTMLTextAreaElement>(null)
+  const editorInstance = useRef<any>(null)
+  
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
@@ -25,6 +33,29 @@ export default function NewPostPage() {
   })
   const [tagInput, setTagInput] = useState('')
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (editorRef.current && EasyMDE && !editorInstance.current) {
+      editorInstance.current = new EasyMDE({
+        element: editorRef.current,
+        placeholder: 'Markdown形式で記事を書いてください...',
+        spellChecker: false,
+        status: false,
+      })
+      
+      editorInstance.current.codemirror.on('change', () => {
+        const value = editorInstance.current.value()
+        setFormData(prev => ({ ...prev, content: value }))
+      })
+    }
+
+    return () => {
+      if (editorInstance.current) {
+        editorInstance.current.toTextArea()
+        editorInstance.current = null
+      }
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -281,14 +312,10 @@ export default function NewPostPage() {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             本文（Markdown形式） <span className="text-red-500">*</span>
           </label>
-          <SimpleMDE
-            value={formData.content}
-            onChange={(value) => setFormData({ ...formData, content: value })}
-            options={{
-              placeholder: 'Markdown形式で記事を書いてください...',
-              spellChecker: false,
-              status: false,
-            }}
+          <textarea
+            ref={editorRef}
+            defaultValue={formData.content}
+            className="w-full min-h-[400px]"
           />
         </div>
 

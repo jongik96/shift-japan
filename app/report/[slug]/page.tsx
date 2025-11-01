@@ -22,13 +22,34 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 
   return {
-    title: `${report.title} | Shift Japan Insight`,
+    title: report.title,
     description: report.excerpt,
-    keywords: report.tags?.join(', '),
+    keywords: report.tags || [],
     openGraph: {
       title: report.title,
       description: report.excerpt,
-      images: [report.main_image],
+      type: 'article',
+      images: report.main_image ? [
+        {
+          url: report.main_image,
+          width: 1200,
+          height: 630,
+          alt: report.title,
+        }
+      ] : [
+        {
+          url: '/shiftjapan-og.png',
+          width: 1200,
+          height: 630,
+          alt: report.title,
+        }
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: report.title,
+      description: report.excerpt,
+      images: report.main_image ? [report.main_image] : ['/shiftjapan-og.png'],
     },
   }
 }

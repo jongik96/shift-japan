@@ -1,5 +1,11 @@
+import { Metadata } from 'next'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+
+export const metadata: Metadata = {
+  title: 'サービスについて',
+  description: 'Shift Japan Insightについて - 日本への移住、転職、キャリアに関する深い洞察とデータ分析を提供する専門プラットフォーム',
+}
 
 export default function AboutPage() {
   return (
