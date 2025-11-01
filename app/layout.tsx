@@ -54,8 +54,8 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: '/shiftjapan-favi.jpg',
-    apple: '/shiftjapan-favi.jpg',
+    icon: '/shiftjapan-favi.png',
+    apple: '/shiftjapan-favi.png',
   },
   verification: {
     // Google Search Console verification code (optional)
