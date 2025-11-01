@@ -71,7 +71,7 @@ export default function EditPostPage() {
         editorInstance.current.value(formData.content)
       }
     }
-  }, [formData.content, loading])
+  }, [loading])
 
   const fetchPost = async () => {
     try {

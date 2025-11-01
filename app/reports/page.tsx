@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 export default async function ReportsPage() {
   // TODO: Fetch from Supabase
-  const reports = []
+  const reports: any[] = []
 
   return (
     <>
