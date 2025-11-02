@@ -1,6 +1,14 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { locales, defaultLocale, isValidLocale } from '@/lib/i18n/config'
+
+// Edge Runtime compatible constants - defined directly in middleware
+const locales = ['ja', 'en', 'ko'] as const
+const defaultLocale = 'ja'
+type Locale = 'ja' | 'en' | 'ko'
+
+function isValidLocale(locale: string): locale is Locale {
+  return locale === 'ja' || locale === 'en' || locale === 'ko'
+}
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
@@ -19,9 +27,10 @@ export function middleware(request: NextRequest) {
   }
 
   // Check if pathname already has a valid locale
-  const pathnameHasLocale = locales.some(
-    (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)
-  )
+  const hasJa = pathname === '/ja' || pathname.startsWith('/ja/')
+  const hasEn = pathname === '/en' || pathname.startsWith('/en/')
+  const hasKo = pathname === '/ko' || pathname.startsWith('/ko/')
+  const pathnameHasLocale = hasJa || hasEn || hasKo
 
   if (pathnameHasLocale) {
     return NextResponse.next()
@@ -29,7 +38,7 @@ export function middleware(request: NextRequest) {
 
   // Detect locale from Accept-Language header
   const acceptLanguage = request.headers.get('accept-language') || ''
-  let detectedLocale = defaultLocale
+  let detectedLocale: Locale = defaultLocale
 
   // Parse Accept-Language header
   const preferredLanguages = acceptLanguage
@@ -46,7 +55,7 @@ export function middleware(request: NextRequest) {
   // Find first matching locale
   for (const pref of preferredLanguages) {
     if (pref.locale === 'ko' || pref.locale === 'ja' || pref.locale === 'en') {
-      detectedLocale = pref.locale as typeof defaultLocale
+      detectedLocale = pref.locale as Locale
       break
     }
   }
