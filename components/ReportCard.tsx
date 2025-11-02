@@ -23,7 +23,7 @@ export default function ReportCard({
 }: ReportCardProps) {
   return (
     <Link
-      href={`/${locale}/report/${slug}`}
+      href={`/report/${slug}`}
       className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition group"
     >
       {main_image ? (

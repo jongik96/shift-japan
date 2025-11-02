@@ -2,8 +2,8 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { useParams, usePathname } from 'next/navigation'
-import { useTranslations, useLocale } from '@/lib/i18n/hooks'
+import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
 import { locales, type Locale } from '@/lib/i18n/config'
 
 const languageNames: Record<Locale, string> = {
@@ -20,16 +20,16 @@ const languageFlags: Record<Locale, string> = {
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const t = useTranslations()
-  const locale = useLocale() as Locale
-  const pathname = usePathname()
-  const params = useParams()
+  const router = useRouter()
+  const { t } = useTranslation('common')
+  const locale = (router.locale || 'ja') as Locale
 
-  // Get current path without locale
-  const currentPath = pathname?.replace(`/${params?.locale || ''}`, '') || '/'
+  // Get current path without locale prefix
+  const currentPath = router.asPath || '/'
 
   const getLocalizedPath = (targetLocale: Locale) => {
-    return `/${targetLocale}${currentPath === '/' ? '' : currentPath}`
+    // Next.js i18n automatically handles locale prefix
+    return router.asPath || '/'
   }
 
   return (
@@ -37,20 +37,20 @@ export default function Header() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
-            <Link href={`/${locale}`} className="text-2xl font-bold text-gray-900">
+            <Link href="/" className="text-2xl font-bold text-gray-900">
               🇯🇵 Shift Japan Insight
             </Link>
           </div>
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-8">
-            <Link href={`/${locale}`} className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
+            <Link href="/" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
               {t('nav.blog')}
             </Link>
-            <Link href={`/${locale}/about`} className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
+            <Link href="/about" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
               {t('nav.about')}
             </Link>
-            <Link href={`/${locale}/contact`} className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
+            <Link href="/contact" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
               {t('nav.contact')}
             </Link>
             
@@ -67,7 +67,8 @@ export default function Header() {
                 {locales.map((loc) => (
                   <Link
                     key={loc}
-                    href={getLocalizedPath(loc)}
+                    href={router.asPath || '/'}
+                    locale={loc}
                     className={`w-full text-left px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-100 transition ${
                       locale === loc ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700'
                     }`}
@@ -101,20 +102,21 @@ export default function Header() {
         {/* Mobile menu */}
         {isMenuOpen && (
           <div className="md:hidden pb-4">
-            <Link href={`/${locale}`} className="block text-gray-700 hover:text-blue-600 px-3 py-2 text-base font-medium">
+            <Link href="/" className="block text-gray-700 hover:text-blue-600 px-3 py-2 text-base font-medium">
               {t('nav.blog')}
             </Link>
-            <Link href={`/${locale}/about`} className="block text-gray-700 hover:text-blue-600 px-3 py-2 text-base font-medium">
+            <Link href="/about" className="block text-gray-700 hover:text-blue-600 px-3 py-2 text-base font-medium">
               {t('nav.about')}
             </Link>
-            <Link href={`/${locale}/contact`} className="block text-gray-700 hover:text-blue-600 px-3 py-2 text-base font-medium">
+            <Link href="/contact" className="block text-gray-700 hover:text-blue-600 px-3 py-2 text-base font-medium">
               {t('nav.contact')}
             </Link>
             <div className="border-t border-gray-200 mt-2 pt-2">
               {locales.map((loc) => (
                 <Link
                   key={loc}
-                  href={getLocalizedPath(loc)}
+                  href={router.asPath || '/'}
+                  locale={loc}
                   className={`block px-3 py-2 text-base font-medium ${
                     locale === loc ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'
                   }`}

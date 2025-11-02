@@ -1,13 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { useTranslations, useLocale } from '@/lib/i18n/hooks'
-import { useParams } from 'next/navigation'
+import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
 
 export default function Footer() {
-  const t = useTranslations()
-  const locale = useLocale()
-  const params = useParams()
+  const { t } = useTranslation('common')
+  const router = useRouter()
 
   return (
     <footer className="bg-gray-900 text-white mt-20">
@@ -24,17 +23,17 @@ export default function Footer() {
             <h4 className="font-semibold mb-4">{t('footer.links')}</h4>
             <ul className="space-y-2">
               <li>
-                <Link href={`/${locale}`} className="text-gray-300 hover:text-white transition">
+                <Link href="/" className="text-gray-300 hover:text-white transition">
                   {t('nav.blog')}
                 </Link>
               </li>
               <li>
-                <Link href={`/${locale}/about`} className="text-gray-300 hover:text-white transition">
+                <Link href="/about" className="text-gray-300 hover:text-white transition">
                   {t('nav.about')}
                 </Link>
               </li>
               <li>
-                <Link href={`/${locale}/contact`} className="text-gray-300 hover:text-white transition">
+                <Link href="/contact" className="text-gray-300 hover:text-white transition">
                   {t('nav.contact')}
                 </Link>
               </li>
@@ -45,12 +44,12 @@ export default function Footer() {
             <h4 className="font-semibold mb-4">{t('footer.other')}</h4>
             <ul className="space-y-2">
               <li>
-                <Link href={`/${locale}/privacy`} className="text-gray-300 hover:text-white transition">
+                <Link href="/privacy" className="text-gray-300 hover:text-white transition">
                   {t('footer.privacy')}
                 </Link>
               </li>
               <li>
-                <Link href={`/${locale}/terms`} className="text-gray-300 hover:text-white transition">
+                <Link href="/terms" className="text-gray-300 hover:text-white transition">
                   {t('footer.terms')}
                 </Link>
               </li>

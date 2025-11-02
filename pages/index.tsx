@@ -13,8 +13,8 @@ const POSTS_PER_PAGE = 16 // 4x4 grid
 
 export default function Home() {
   const router = useRouter()
-  const locale = (router.locale || 'ja') as Locale
   const { t } = useTranslation('common')
+  const locale = (router.locale || 'ja') as Locale
   const [allReports, setAllReports] = useState<any[]>([])
   const [displayedReports, setDisplayedReports] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
