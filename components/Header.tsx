@@ -2,9 +2,9 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { useI18n } from '@/lib/i18n/context'
-import { Locale, locales } from '@/lib/i18n/routing'
+import { useTranslations, useLocale } from 'next-intl'
 import { useParams, usePathname } from 'next/navigation'
+import { locales, type Locale } from '@/i18n'
 
 const languageNames: Record<Locale, string> = {
   ja: '日本語',
@@ -20,7 +20,8 @@ const languageFlags: Record<Locale, string> = {
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { t, locale } = useI18n()
+  const t = useTranslations()
+  const locale = useLocale() as Locale
   const pathname = usePathname()
   const params = useParams()
 
@@ -44,13 +45,13 @@ export default function Header() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-8">
             <Link href={`/${locale}`} className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
-              {t.nav.blog}
+              {t('nav.blog')}
             </Link>
             <Link href={`/${locale}/about`} className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
-              {t.nav.about}
+              {t('nav.about')}
             </Link>
             <Link href={`/${locale}/contact`} className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
-              {t.nav.contact}
+              {t('nav.contact')}
             </Link>
             
             {/* Language Switcher */}
@@ -84,7 +85,7 @@ export default function Header() {
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-gray-700 hover:text-blue-600 focus:outline-none focus:text-blue-600"
-              aria-label={t.nav.menu}
+              aria-label={t('nav.menu')}
             >
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {isMenuOpen ? (
@@ -101,13 +102,13 @@ export default function Header() {
         {isMenuOpen && (
           <div className="md:hidden pb-4">
             <Link href={`/${locale}`} className="block text-gray-700 hover:text-blue-600 px-3 py-2 text-base font-medium">
-              {t.nav.blog}
+              {t('nav.blog')}
             </Link>
             <Link href={`/${locale}/about`} className="block text-gray-700 hover:text-blue-600 px-3 py-2 text-base font-medium">
-              {t.nav.about}
+              {t('nav.about')}
             </Link>
             <Link href={`/${locale}/contact`} className="block text-gray-700 hover:text-blue-600 px-3 py-2 text-base font-medium">
-              {t.nav.contact}
+              {t('nav.contact')}
             </Link>
             <div className="border-t border-gray-200 mt-2 pt-2">
               {locales.map((loc) => (

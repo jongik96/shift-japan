@@ -1,11 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { useI18n } from '@/lib/i18n/context'
+import { useTranslations, useLocale } from 'next-intl'
 import { useParams } from 'next/navigation'
 
 export default function Footer() {
-  const { t, locale } = useI18n()
+  const t = useTranslations()
+  const locale = useLocale()
   const params = useParams()
 
   return (
@@ -15,42 +16,42 @@ export default function Footer() {
           <div className="col-span-1 md:col-span-2">
             <h3 className="text-2xl font-bold mb-4">🇯🇵 Shift Japan Insight</h3>
             <p className="text-gray-300 mb-4">
-              {t.footer.description}
+              {t('footer.description')}
             </p>
           </div>
           
           <div>
-            <h4 className="font-semibold mb-4">{t.footer.links}</h4>
+            <h4 className="font-semibold mb-4">{t('footer.links')}</h4>
             <ul className="space-y-2">
               <li>
                 <Link href={`/${locale}`} className="text-gray-300 hover:text-white transition">
-                  {t.nav.blog}
+                  {t('nav.blog')}
                 </Link>
               </li>
               <li>
                 <Link href={`/${locale}/about`} className="text-gray-300 hover:text-white transition">
-                  {t.nav.about}
+                  {t('nav.about')}
                 </Link>
               </li>
               <li>
                 <Link href={`/${locale}/contact`} className="text-gray-300 hover:text-white transition">
-                  {t.nav.contact}
+                  {t('nav.contact')}
                 </Link>
               </li>
             </ul>
           </div>
           
           <div>
-            <h4 className="font-semibold mb-4">{t.footer.other}</h4>
+            <h4 className="font-semibold mb-4">{t('footer.other')}</h4>
             <ul className="space-y-2">
               <li>
                 <Link href={`/${locale}/privacy`} className="text-gray-300 hover:text-white transition">
-                  {t.footer.privacy}
+                  {t('footer.privacy')}
                 </Link>
               </li>
               <li>
                 <Link href={`/${locale}/terms`} className="text-gray-300 hover:text-white transition">
-                  {t.footer.terms}
+                  {t('footer.terms')}
                 </Link>
               </li>
             </ul>
@@ -58,7 +59,7 @@ export default function Footer() {
         </div>
         
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
-          <p>&copy; {new Date().getFullYear()} Shift Japan Insight. {t.footer.rights}</p>
+          <p>&copy; {new Date().getFullYear()} Shift Japan Insight. {t('footer.rights')}</p>
         </div>
       </div>
     </footer>

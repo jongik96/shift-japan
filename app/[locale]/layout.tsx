@@ -1,17 +1,9 @@
-import { I18nProvider } from '@/lib/i18n/context'
-import { redirect } from 'next/navigation'
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages } from 'next-intl/server'
+import { notFound } from 'next/navigation'
+import { locales } from '@/i18n'
 
-// Define types and functions directly to avoid Edge Runtime issues
-type Locale = 'ja' | 'en' | 'ko'
-
-const locales = ['ja', 'en', 'ko'] as const
-const defaultLocale = 'ja'
-
-function isValidLocale(locale: string): locale is Locale {
-  return locales.includes(locale as Locale)
-}
-
-export default function LocaleLayout({
+export default async function LocaleLayout({
   children,
   params,
 }: {
@@ -21,16 +13,18 @@ export default function LocaleLayout({
   const locale = params.locale
 
   // Validate locale
-  if (!isValidLocale(locale)) {
-    redirect(`/${defaultLocale}`)
+  if (!locales.includes(locale as any)) {
+    notFound()
   }
 
+  const messages = await getMessages()
+
   return (
-    <I18nProvider locale={locale as Locale}>
+    <NextIntlClientProvider messages={messages}>
       <div className="min-h-screen bg-gray-50">
         {children}
       </div>
-    </I18nProvider>
+    </NextIntlClientProvider>
   )
 }
 

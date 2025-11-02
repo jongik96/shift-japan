@@ -3,12 +3,11 @@
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { useI18n } from '@/lib/i18n/context'
-import { useParams } from 'next/navigation'
+import { useTranslations, useLocale } from 'next-intl'
 
 export default function NotFound() {
-  const { t, locale } = useI18n()
-  const params = useParams()
+  const t = useTranslations()
+  const locale = useLocale()
 
   return (
     <>
@@ -17,10 +16,10 @@ export default function NotFound() {
         <div className="mb-8">
           <div className="text-9xl font-bold text-gray-200 mb-4">404</div>
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            {t.notFound.title}
+            {t('notFound.title')}
           </h1>
           <p className="text-lg text-gray-600 mb-8">
-            {t.notFound.description}
+            {t('notFound.description')}
           </p>
         </div>
 
@@ -29,13 +28,13 @@ export default function NotFound() {
             href={`/${locale}`}
             className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
           >
-            {t.notFound.home}
+            {t('notFound.home')}
           </Link>
           <Link
             href={`/${locale}/reports`}
             className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold border-2 border-blue-600 hover:bg-blue-50 transition"
           >
-            {t.notFound.reports}
+            {t('notFound.reports')}
           </Link>
         </div>
       </main>

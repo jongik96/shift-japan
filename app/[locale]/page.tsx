@@ -5,7 +5,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import ReportCard from '@/components/ReportCard'
 import { supabase } from '@/lib/supabase'
-import { useI18n } from '@/lib/i18n/context'
+import { useTranslations, useLocale } from 'next-intl'
 import { getTableName, Locale } from '@/lib/i18n/routing'
 import { useParams } from 'next/navigation'
 
@@ -13,26 +13,26 @@ const POSTS_PER_PAGE = 16 // 4x4 grid
 
 export default function Home() {
   const params = useParams()
-  const locale = params.locale as Locale
-  const { t } = useI18n()
+  const locale = useLocale() as Locale
+  const t = useTranslations()
   const [allReports, setAllReports] = useState<any[]>([])
   const [displayedReports, setDisplayedReports] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState(t.home.categories.all)
+  const [selectedCategory, setSelectedCategory] = useState(t('home.categories.all'))
   const observerTarget = useRef<HTMLDivElement>(null)
 
   const categories = [
-    t.home.categories.all,
-    t.home.categories.announcement,
-    t.home.categories.residence,
-    t.home.categories.career,
-    t.home.categories.finance,
-    t.home.categories.tax,
-    t.home.categories.culture,
-    t.home.categories.data,
-    t.home.categories.travel,
-    t.home.categories.food,
+    t('home.categories.all'),
+    t('home.categories.announcement'),
+    t('home.categories.residence'),
+    t('home.categories.career'),
+    t('home.categories.finance'),
+    t('home.categories.tax'),
+    t('home.categories.culture'),
+    t('home.categories.data'),
+    t('home.categories.travel'),
+    t('home.categories.food'),
   ]
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export default function Home() {
     let filtered = [...allReports]
 
     // Category filter
-    if (selectedCategory !== t.home.categories.all) {
+    if (selectedCategory !== t('home.categories.all')) {
       filtered = filtered.filter(report => 
         report.categories && report.categories.includes(selectedCategory)
       )
@@ -91,7 +91,7 @@ export default function Home() {
     setLoading(true)
     let filtered = [...allReports]
 
-    if (selectedCategory !== t.home.categories.all) {
+    if (selectedCategory !== t('home.categories.all')) {
       filtered = filtered.filter(report => 
         report.categories && report.categories.includes(selectedCategory)
       )
@@ -147,10 +147,10 @@ export default function Home() {
         {/* Page Header */}
         <div className="mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            {t.home.title}
+            {t('home.title')}
           </h1>
           <p className="text-xl text-gray-600">
-            {t.home.subtitle}
+            {t('home.subtitle')}
           </p>
         </div>
 
@@ -160,7 +160,7 @@ export default function Home() {
           <div className="relative">
             <input
               type="text"
-              placeholder={t.home.searchPlaceholder}
+              placeholder={t('home.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
@@ -198,9 +198,9 @@ export default function Home() {
           </div>
 
           {/* Results count */}
-          {(searchQuery || selectedCategory !== t.home.categories.all) && (
+          {(searchQuery || selectedCategory !== t('home.categories.all')) && (
             <div className="text-sm text-gray-600">
-              {displayedReports.length}{t.home.searchResults}
+              {displayedReports.length}{t('home.searchResults')}
             </div>
           )}
         </div>
@@ -209,7 +209,7 @@ export default function Home() {
         {loading && displayedReports.length === 0 ? (
           <div className="text-center py-20">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-            <p className="mt-4 text-gray-600">{t.home.loading}</p>
+            <p className="mt-4 text-gray-600">{t('home.loading')}</p>
           </div>
         ) : displayedReports.length > 0 ? (
           <>
@@ -238,10 +238,10 @@ export default function Home() {
           <div className="text-center py-20">
             <div className="text-6xl mb-6">🔍</div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              {t.home.noResults.title}
+              {t('home.noResults.title')}
             </h2>
             <p className="text-gray-600">
-              {t.home.noResults.description}
+              {t('home.noResults.description')}
             </p>
           </div>
         )}
