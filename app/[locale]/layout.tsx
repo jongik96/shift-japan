@@ -1,8 +1,9 @@
 import { I18nProvider } from '@/lib/i18n/context'
-import { Locale } from '@/lib/i18n/routing'
 import { redirect } from 'next/navigation'
 
-// Use constants directly to avoid Edge Runtime issues
+// Define types and functions directly to avoid Edge Runtime issues
+type Locale = 'ja' | 'en' | 'ko'
+
 const locales = ['ja', 'en', 'ko'] as const
 const defaultLocale = 'ja'
 

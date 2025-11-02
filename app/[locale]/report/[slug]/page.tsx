@@ -4,7 +4,20 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import ReportClient from './ReportClient'
 import { supabase } from '@/lib/supabase'
-import { getTableName, Locale, isValidLocale } from '@/lib/i18n/routing'
+
+// Define types and functions directly to avoid Edge Runtime issues
+export type Locale = 'ja' | 'en' | 'ko'
+
+const locales = ['ja', 'en', 'ko'] as const
+const defaultLocale = 'ja'
+
+function isValidLocale(locale: string): locale is Locale {
+  return locales.includes(locale as Locale)
+}
+
+function getTableName(locale: Locale): string {
+  return `blog_${locale}`
+}
 
 interface ReportPageProps {
   params: {
