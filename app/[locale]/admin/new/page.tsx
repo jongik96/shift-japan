@@ -237,30 +237,30 @@ export default function NewPostPage() {
               const ogImage = getMetaContent('og:image')
               const ogSiteName = getMetaContent('og:site_name') || ''
 
-              // Update the preview card
-              const titleEl = cardElement.querySelector('.link-preview-title')
-              const descEl = cardElement.querySelector('.link-preview-description')
-              const imageContainer = cardElement.querySelector('.link-preview-image') as HTMLElement
-              const imgEl = imageContainer?.querySelector('img') as HTMLImageElement
+            // Update the preview card
+            const titleEl = cardElement.querySelector('.link-preview-title') as HTMLElement | null
+            const descEl = cardElement.querySelector('.link-preview-description') as HTMLElement | null
+            const imageContainer = cardElement.querySelector('.link-preview-image') as HTMLElement | null
+            const imgEl = imageContainer?.querySelector('img') as HTMLImageElement | null
 
-              if (titleEl) {
-                titleEl.textContent = ogTitle
-              }
+            if (titleEl) {
+              titleEl.textContent = ogTitle
+            }
 
-              if (descEl && ogDescription) {
-                descEl.textContent = ogDescription
-                descEl.style.display = 'block'
-              }
+            if (descEl && ogDescription) {
+              descEl.textContent = ogDescription
+              descEl.style.display = 'block'
+            }
 
-              if (ogImage && imageContainer && imgEl) {
-                imgEl.src = ogImage
-                imgEl.alt = ogTitle
-                imgEl.style.display = 'block'
-                imageContainer.style.display = 'block'
-                imgEl.onerror = () => {
-                  imageContainer.style.display = 'none'
-                }
+            if (ogImage && imageContainer && imgEl) {
+              imgEl.src = ogImage
+              imgEl.alt = ogTitle
+              imgEl.style.display = 'block'
+              imageContainer.style.display = 'block'
+              imgEl.onerror = () => {
+                imageContainer.style.display = 'none'
               }
+            }
             } catch (error) {
               console.warn('Failed to fetch OG metadata for', url, error)
             }

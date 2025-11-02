@@ -252,7 +252,7 @@ export default function ContentRenderer({ blocks, onHeadingRender }: ContentRend
             // Clean up: ensure each row is properly formatted
             tableText = tableText
               .split('\n')
-              .map(line => {
+              .map((line: string) => {
                 line = line.trim()
                 // Ensure row starts and ends with |
                 if (line && !line.startsWith('|')) {
@@ -263,7 +263,7 @@ export default function ContentRenderer({ blocks, onHeadingRender }: ContentRend
                 }
                 return line
               })
-              .filter(line => line.length > 0)
+              .filter((line: string) => line.length > 0)
               .join('\n')
           } else {
             // Table has line breaks but individual lines might have multiple rows merged
@@ -271,7 +271,7 @@ export default function ContentRenderer({ blocks, onHeadingRender }: ContentRend
             // Need to split rows within each line
             tableText = text
               .split('\n')
-              .map(line => {
+              .map((line: string) => {
                 line = line.trim()
                 // If line contains multiple rows (pattern: "| ... |" + space + "|")
                 // Split them
@@ -284,8 +284,8 @@ export default function ContentRenderer({ blocks, onHeadingRender }: ContentRend
               .join('\n')
               // Split again in case we created new rows, then clean up
               .split('\n')
-              .map(line => line.trim())
-              .filter(line => line.length > 0 && line.includes('|'))
+              .map((line: string) => line.trim())
+              .filter((line: string) => line.length > 0 && line.includes('|'))
               .join('\n')
           }
           

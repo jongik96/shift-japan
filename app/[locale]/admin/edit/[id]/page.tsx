@@ -325,10 +325,10 @@ export default function EditPostPage() {
             const ogSiteName = getMetaContent('og:site_name') || ''
 
             // Update the preview card
-            const titleEl = cardElement.querySelector('.link-preview-title')
-            const descEl = cardElement.querySelector('.link-preview-description')
-            const imageContainer = cardElement.querySelector('.link-preview-image') as HTMLElement
-            const imgEl = imageContainer?.querySelector('img') as HTMLImageElement
+            const titleEl = cardElement.querySelector('.link-preview-title') as HTMLElement | null
+            const descEl = cardElement.querySelector('.link-preview-description') as HTMLElement | null
+            const imageContainer = cardElement.querySelector('.link-preview-image') as HTMLElement | null
+            const imgEl = imageContainer?.querySelector('img') as HTMLImageElement | null
 
             if (titleEl) {
               titleEl.textContent = ogTitle
