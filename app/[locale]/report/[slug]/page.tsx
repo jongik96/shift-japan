@@ -5,11 +5,12 @@ import Footer from '@/components/Footer'
 import ReportClient from './ReportClient'
 import { supabase } from '@/lib/supabase'
 
-import { locales, type Locale } from '@/lib/i18n/config'
+import { type Locale } from '@/lib/i18n/config'
 import { getTableName } from '@/lib/i18n/routing'
 
+// Edge Runtime compatible locale validation
 function isValidLocale(locale: string): locale is Locale {
-  return locales.includes(locale as Locale)
+  return locale === 'ja' || locale === 'en' || locale === 'ko'
 }
 
 interface ReportPageProps {

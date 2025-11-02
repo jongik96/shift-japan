@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { locales, isValidLocale } from '@/lib/i18n/config'
+import { isValidLocale } from '@/lib/i18n/config'
 
 export default function LocaleLayout({
   children,
@@ -10,7 +10,7 @@ export default function LocaleLayout({
 }) {
   const locale = params.locale
 
-  // Validate locale
+  // Validate locale (Edge Runtime compatible)
   if (!isValidLocale(locale)) {
     notFound()
   }

@@ -10,7 +10,8 @@ export const localeNames: Record<Locale, string> = {
 }
 
 export function isValidLocale(locale: string): locale is Locale {
-  return locales.includes(locale as Locale)
+  // Edge Runtime compatible - no array methods
+  return locale === 'ja' || locale === 'en' || locale === 'ko'
 }
 
 export function getTableName(locale: Locale): string {

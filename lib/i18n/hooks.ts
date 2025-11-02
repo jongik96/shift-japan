@@ -3,30 +3,30 @@
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Locale, isValidLocale } from './config'
-import type { ComponentProps } from 'react'
+
+// Static imports for all locales - ensures build-time bundling
+import jaDict from '@/public/locales/ja/common.json'
+import enDict from '@/public/locales/en/common.json'
+import koDict from '@/public/locales/ko/common.json'
 
 type Dictionary = any
+
+const dictionaries: Record<Locale, any> = {
+  ja: jaDict,
+  en: enDict,
+  ko: koDict,
+}
 
 export function useTranslations() {
   const params = useParams()
   const locale = (params?.locale as string) || 'ja'
+  const validLocale = isValidLocale(locale) ? locale : 'ja'
   const [dictionary, setDictionary] = useState<Dictionary | null>(null)
 
   useEffect(() => {
-    const validLocale = isValidLocale(locale) ? locale : 'ja'
-    
-    // Dynamic import based on locale
-    import(`@/public/locales/${validLocale}/common.json`)
-      .then((module) => {
-        setDictionary(module.default)
-      })
-      .catch((error) => {
-        console.error('Failed to load dictionary:', error)
-        // Fallback to default locale
-        import('@/public/locales/ja/common.json')
-          .then((module) => setDictionary(module.default))
-      })
-  }, [locale])
+    // Use static dictionary lookup
+    setDictionary(dictionaries[validLocale] || dictionaries.ja)
+  }, [validLocale])
 
   const getValue = (key: string): any => {
     if (!dictionary) return key

@@ -40,23 +40,48 @@ export function middleware(request: NextRequest) {
   const acceptLanguage = request.headers.get('accept-language') || ''
   let detectedLocale: Locale = defaultLocale
 
-  // Parse Accept-Language header
-  const preferredLanguages = acceptLanguage
-    .split(',')
-    .map((lang) => {
-      const [locale, priority] = lang.trim().split(';q=')
-      return {
-        locale: locale.split('-')[0].toLowerCase(),
-        priority: priority ? parseFloat(priority) : 1.0,
+  // Simple locale detection - Edge Runtime compatible
+  if (acceptLanguage) {
+    // Parse Accept-Language header manually (no .map() or .sort())
+    const languages: Array<{ locale: string; priority: number }> = []
+    const parts = acceptLanguage.split(',')
+    
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i].trim()
+      const qIndex = part.indexOf(';q=')
+      let locale = ''
+      let priority = 1.0
+      
+      if (qIndex > 0) {
+        locale = part.substring(0, qIndex).split('-')[0].toLowerCase()
+        const qValue = part.substring(qIndex + 3)
+        priority = parseFloat(qValue) || 1.0
+      } else {
+        locale = part.split('-')[0].toLowerCase()
+        priority = 1.0
       }
-    })
-    .sort((a, b) => b.priority - a.priority)
-
-  // Find first matching locale
-  for (const pref of preferredLanguages) {
-    if (pref.locale === 'ko' || pref.locale === 'ja' || pref.locale === 'en') {
-      detectedLocale = pref.locale as Locale
-      break
+      
+      languages.push({ locale, priority })
+    }
+    
+    // Simple bubble sort (Edge Runtime compatible)
+    for (let i = 0; i < languages.length - 1; i++) {
+      for (let j = 0; j < languages.length - 1 - i; j++) {
+        if (languages[j].priority < languages[j + 1].priority) {
+          const temp = languages[j]
+          languages[j] = languages[j + 1]
+          languages[j + 1] = temp
+        }
+      }
+    }
+    
+    // Find first matching locale
+    for (let i = 0; i < languages.length; i++) {
+      const lang = languages[i].locale
+      if (lang === 'ko' || lang === 'ja' || lang === 'en') {
+        detectedLocale = lang as Locale
+        break
+      }
     }
   }
 
