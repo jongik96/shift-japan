@@ -1,6 +1,14 @@
 import { I18nProvider } from '@/lib/i18n/context'
-import { Locale, defaultLocale, isValidLocale } from '@/lib/i18n/routing'
+import { Locale } from '@/lib/i18n/routing'
 import { redirect } from 'next/navigation'
+
+// Use constants directly to avoid Edge Runtime issues
+const locales = ['ja', 'en', 'ko'] as const
+const defaultLocale = 'ja'
+
+function isValidLocale(locale: string): locale is Locale {
+  return locales.includes(locale as Locale)
+}
 
 export default function LocaleLayout({
   children,
