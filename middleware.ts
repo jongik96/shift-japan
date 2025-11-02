@@ -50,6 +50,7 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
+  runtime: 'nodejs', // Use Node.js runtime to avoid Edge Runtime __dirname issues
   matcher: [
     '/((?!api|_next|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)',
   ],
