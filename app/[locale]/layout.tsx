@@ -12,7 +12,7 @@ export default function LocaleLayout({
   children: React.ReactNode
   params: { locale: string }
 }) {
-  const locale = params.locale
+  const locale = params?.locale || 'ja'
 
   // Validate locale
   if (!isValidLocale(locale)) {

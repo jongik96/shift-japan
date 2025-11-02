@@ -18,7 +18,7 @@ const categoriesByLocale: Record<Locale, string[]> = {
 export default function NewPostPage() {
   const router = useRouter()
   const params = useParams()
-  const locale = params.locale as string
+  const locale = (params?.locale as string) || 'ja'
   const editorRef = useRef<HTMLTextAreaElement>(null)
   const editorInstance = useRef<any>(null)
   

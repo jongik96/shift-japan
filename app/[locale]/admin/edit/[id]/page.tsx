@@ -18,8 +18,8 @@ const categoriesByLocale: Record<Locale, string[]> = {
 export default function EditPostPage() {
   const router = useRouter()
   const params = useParams()
-  const locale = params.locale as string
-  const postId = params.id as string
+  const locale = (params?.locale as string) || 'ja'
+  const postId = (params?.id as string) || ''
   const editorRef = useRef<HTMLTextAreaElement>(null)
   const editorInstance = useRef<any>(null)
   const isUpdatingFromExternalRef = useRef(false)

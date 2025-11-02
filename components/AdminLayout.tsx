@@ -29,11 +29,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
     // Localhost - check auth
     const auth = localStorage.getItem('admin_authenticated')
-    const locale = pathname.split('/')[1] || 'ko'
+    const locale = pathname?.split('/')[1] || 'ko'
     const loginPath = `/${locale}/admin/login`
     if (auth === 'true') {
       setIsAuthenticated(true)
-    } else if (!pathname.includes('/admin/login')) {
+    } else if (pathname && !pathname.includes('/admin/login')) {
       router.push(loginPath)
     }
     setLoading(false)
@@ -41,7 +41,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   const handleLogout = () => {
     localStorage.removeItem('admin_authenticated')
-    const locale = pathname.split('/')[1] || 'ko'
+    const locale = pathname?.split('/')[1] || 'ko'
     router.push(`/${locale}/admin/login`)
   }
 
@@ -65,7 +65,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     )
   }
 
-  if (pathname.includes('/admin/login')) {
+  if (pathname && pathname.includes('/admin/login')) {
     return <>{children}</>
   }
 
@@ -81,7 +81,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               {(() => {
-                const locale = pathname.split('/')[1] || 'ko'
+                const locale = pathname?.split('/')[1] || 'ko'
                 const adminBase = `/${locale}/admin`
                 return (
                   <>

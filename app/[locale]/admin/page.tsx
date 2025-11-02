@@ -7,7 +7,7 @@ import { useRouter, useParams } from 'next/navigation'
 
 export default function AdminPage() {
   const params = useParams()
-  const locale = params.locale as string
+  const locale = (params?.locale as string) || 'ja'
   const [reports, setReports] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)

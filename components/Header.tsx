@@ -26,7 +26,7 @@ export default function Header() {
   const params = useParams()
 
   // Get current path without locale
-  const currentPath = pathname?.replace(`/${params.locale}`, '') || '/'
+  const currentPath = pathname?.replace(`/${params?.locale || ''}`, '') || '/'
 
   const getLocalizedPath = (targetLocale: Locale) => {
     return `/${targetLocale}${currentPath === '/' ? '' : currentPath}`

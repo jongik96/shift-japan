@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 
 export default function AdminLoginPage() {
   const params = useParams()
-  const locale = params.locale as string
+  const locale = (params?.locale as string) || 'ja'
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
