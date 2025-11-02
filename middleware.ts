@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { locales, defaultLocale } from './lib/i18n/routing'
+
+// Define constants directly in middleware to avoid import issues in Edge Runtime
+const locales = ['ja', 'en', 'ko'] as const
+const defaultLocale = 'ja'
 
 export function middleware(request: NextRequest) {
   try {
@@ -26,21 +29,26 @@ export function middleware(request: NextRequest) {
 
     // If pathname doesn't have a locale, redirect to default locale
     if (!pathnameHasLocale) {
-      const locale = defaultLocale
       // Handle root path
-      const redirectPath = pathname === '/' ? `/${locale}` : `/${locale}${pathname}`
+      const redirectPath = pathname === '/' ? `/${defaultLocale}` : `/${defaultLocale}${pathname}`
       
       // Use request.nextUrl.clone() for safer URL manipulation
-      const url = request.nextUrl.clone()
-      url.pathname = redirectPath
-      return NextResponse.redirect(url)
+      try {
+        const url = request.nextUrl.clone()
+        url.pathname = redirectPath
+        return NextResponse.redirect(url)
+      } catch (redirectError) {
+        // Fallback: construct URL from request URL
+        const baseUrl = request.url.split(request.nextUrl.pathname)[0]
+        const redirectUrl = new URL(redirectPath, baseUrl)
+        return NextResponse.redirect(redirectUrl)
+      }
     }
 
     return NextResponse.next()
   } catch (error) {
     // Catch any unexpected errors in middleware
-    // In production, we should log this to a monitoring service
-    // For now, just return next to prevent blocking the request
+    // Return next to prevent blocking the request
     return NextResponse.next()
   }
 }
