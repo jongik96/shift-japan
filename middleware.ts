@@ -1,6 +1,26 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { locales, defaultLocale, isValidLocale, getLocaleFromAcceptLanguage } from './lib/i18n/config'
+
+// Edge Runtime에서 직접 정의 - import 사용 최소화
+const locales = ['ja', 'en', 'ko']
+const defaultLocale = 'ja'
+
+function isValidLocale(locale: string): boolean {
+  return locale === 'ja' || locale === 'en' || locale === 'ko'
+}
+
+function getLocaleFromAcceptLanguage(acceptLanguage: string | null): string {
+  if (!acceptLanguage) return defaultLocale
+  
+  const lower = acceptLanguage.toLowerCase()
+  
+  // 간단한 문자열 검색으로 처리
+  if (lower.includes('ko')) return 'ko'
+  if (lower.includes('ja')) return 'ja'
+  if (lower.includes('en')) return 'en'
+  
+  return defaultLocale
+}
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
@@ -11,23 +31,22 @@ export function middleware(request: NextRequest) {
     pathname.startsWith('/api/') ||
     pathname.startsWith('/static/') ||
     pathname.includes('.') ||
-    pathname.startsWith('/favicon.ico')
+    pathname === '/favicon.ico'
   ) {
     return NextResponse.next()
   }
 
-  // URL에서 locale 추출
-  const pathnameSegments = pathname.split('/').filter(Boolean)
-  const firstSegment = pathnameSegments[0]
+  // URL에서 첫 번째 세그먼트 추출
+  const segments = pathname.split('/')
+  const firstSegment = segments[1] || ''
 
-  // 이미 locale이 있는 경우
+  // 이미 locale이 있는 경우 통과
   if (isValidLocale(firstSegment)) {
     return NextResponse.next()
   }
 
   // 루트 경로 (/) 접속 시
   if (pathname === '/') {
-    // Accept-Language 헤더에서 브라우저 언어 감지
     const acceptLanguage = request.headers.get('accept-language')
     const detectedLocale = getLocaleFromAcceptLanguage(acceptLanguage)
     
@@ -44,14 +63,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - static files (images, etc.)
-     */
     '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)',
   ],
 }
