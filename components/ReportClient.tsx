@@ -2,54 +2,62 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { useTranslation } from 'next-i18next'
+import { useParams } from 'next/navigation'
 import ContentRenderer from '@/components/ContentRenderer'
 import TOC from '@/components/TOC'
 import ShareBar from '@/components/ShareBar'
 import MobileTOCButton from '@/components/MobileTOCButton'
 import { TOCItem } from '@/lib/types'
-import { Locale } from '@/lib/i18n/routing'
+import { Locale } from '@/lib/i18n/config'
 
 interface ReportClientProps {
   report: any
   locale: Locale
+  dictionary: any
 }
 
-export default function ReportClient({ report, locale }: ReportClientProps) {
-  const { t } = useTranslation('common')
-  const router = useRouter()
+export default function ReportClient({ report, locale, dictionary }: ReportClientProps) {
+  const params = useParams()
   const [tocItems, setTocItems] = useState<TOCItem[]>([])
 
   useEffect(() => {
     // Extract TOC items from content_blocks
-    const items: TOCItem[] = report.content_blocks
-      ?.map((block: any, index: number) => {
-        if (block.type === 'heading_h2') {
-          return {
-            id: `heading-${index}`,
-            text: block.content.text,
-            level: 2,
+    const items: TOCItem[] =
+      report.content_blocks
+        ?.map((block: any, index: number) => {
+          if (block.type === 'heading_h2') {
+            return {
+              id: `heading-${index}`,
+              text: block.content.text,
+              level: 2,
+            }
           }
-        }
-        return null
-      })
-      .filter(Boolean) as TOCItem[] || []
+          return null
+        })
+        .filter(Boolean) || []
     setTocItems(items)
   }, [report.content_blocks])
+
+  const currentLocale = (params?.locale as string) || locale
+  const homePath = `/${currentLocale}`
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-12">
       {/* Back to List Button - Top */}
       <div className="mb-4 sm:mb-6">
         <Link
-          href="/"
+          href={homePath}
           className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium transition text-sm sm:text-base"
         >
           <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
           </svg>
-          {t('report.backToList')}
+          {dictionary.report.backToList}
         </Link>
       </div>
 
@@ -78,10 +86,17 @@ export default function ReportClient({ report, locale }: ReportClientProps) {
               {report.title}
             </h1>
             {report.excerpt && (
-              <p className="text-lg sm:text-xl text-gray-900 mb-4 sm:mb-6 leading-relaxed">{report.excerpt}</p>
+              <p className="text-lg sm:text-xl text-gray-900 mb-4 sm:mb-6 leading-relaxed">
+                {report.excerpt}
+              </p>
             )}
             <div className="flex items-center text-xs sm:text-sm text-gray-700 mb-4 sm:mb-6">
-              <span>{t('report.published')} {new Date(report.created_at).toLocaleDateString(locale === 'ja' ? 'ja-JP' : locale === 'ko' ? 'ko-KR' : 'en-US')}</span>
+              <span>
+                {dictionary.report.published}{' '}
+                {new Date(report.created_at).toLocaleDateString(
+                  locale === 'ja' ? 'ja-JP' : locale === 'ko' ? 'ko-KR' : 'en-US'
+                )}
+              </span>
             </div>
             {report.main_image && (
               <div className="aspect-video rounded-lg overflow-hidden mb-6 sm:mb-8 bg-gray-200">
@@ -101,7 +116,9 @@ export default function ReportClient({ report, locale }: ReportClientProps) {
           {/* Tags */}
           {report.tags && report.tags.length > 0 && (
             <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200">
-              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-900">{t('report.relatedTags')}</h3>
+              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-900">
+                {dictionary.report.relatedTags}
+              </h3>
               <div className="flex flex-wrap gap-2">
                 {report.tags.map((tag: string) => (
                   <span
@@ -118,7 +135,9 @@ export default function ReportClient({ report, locale }: ReportClientProps) {
           {/* Sources */}
           {report.sources && report.sources.length > 0 && (
             <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200">
-              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-900">{t('report.sources')}</h3>
+              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-900">
+                {dictionary.report.sources}
+              </h3>
               <ul className="space-y-2">
                 {report.sources.map((source: any, index: number) => (
                   <li key={index} className="text-sm sm:text-base">
@@ -139,13 +158,18 @@ export default function ReportClient({ report, locale }: ReportClientProps) {
           {/* Back to List Button - Bottom */}
           <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200">
             <Link
-              href="/"
+              href={homePath}
               className="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium shadow-md hover:shadow-lg text-sm sm:text-base"
             >
               <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                />
               </svg>
-              {t('report.backToList')}
+              {dictionary.report.backToList}
             </Link>
           </div>
         </article>
@@ -158,4 +182,3 @@ export default function ReportClient({ report, locale }: ReportClientProps) {
     </main>
   )
 }
-

@@ -1,61 +1,22 @@
 'use client'
 
 import { useParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
 import { Locale, isValidLocale } from './config'
 
-// Static imports for all locales - ensures build-time bundling
-import jaDict from '@/public/locales/ja/common.json'
-import enDict from '@/public/locales/en/common.json'
-import koDict from '@/public/locales/ko/common.json'
-
-type Dictionary = any
-
-const dictionaries: Record<Locale, any> = {
-  ja: jaDict,
-  en: enDict,
-  ko: koDict,
-}
-
+// 클라이언트에서 번역 데이터를 사용하는 훅
 export function useTranslations() {
   const params = useParams()
   const locale = (params?.locale as string) || 'ja'
   const validLocale = isValidLocale(locale) ? locale : 'ja'
-  const [dictionary, setDictionary] = useState<Dictionary | null>(null)
 
-  useEffect(() => {
-    // Use static dictionary lookup
-    setDictionary(dictionaries[validLocale] || dictionaries.ja)
-  }, [validLocale])
-
-  const getValue = (key: string): any => {
-    if (!dictionary) return key
-    
-    const keys = key.split('.')
-    let value: any = dictionary
-    
-    for (const k of keys) {
-      if (value && typeof value === 'object' && k in value) {
-        value = value[k]
-      } else {
-        return key
-      }
+  // 번역 데이터는 서버에서만 로드되므로, 클라이언트에서는 간단한 타입만 반환
+  // 실제 번역은 서버 컴포넌트에서 처리
+  return useMemo(() => {
+    return {
+      locale: validLocale,
     }
-    
-    return value
-  }
-
-  const t = ((key: string): string => {
-    const value = getValue(key)
-    return typeof value === 'string' ? value : key
-  }) as any
-
-  // For accessing raw values (arrays, objects, etc.)
-  t.raw = (key: string): any => {
-    return getValue(key)
-  }
-
-  return t
+  }, [validLocale])
 }
 
 export function useLocale(): Locale {
@@ -63,4 +24,3 @@ export function useLocale(): Locale {
   const locale = (params?.locale as string) || 'ja'
   return isValidLocale(locale) ? locale : 'ja'
 }
-

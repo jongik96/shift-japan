@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Locale } from '@/lib/i18n/routing'
+import { Locale } from '@/lib/i18n/config'
 
 interface ReportCardProps {
   id: string
@@ -23,7 +23,7 @@ export default function ReportCard({
 }: ReportCardProps) {
   return (
     <Link
-      href={`/report/${slug}`}
+      href={`/${locale}/report/${slug}`}
       className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition group"
     >
       {main_image ? (
