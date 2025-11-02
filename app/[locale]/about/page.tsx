@@ -1,0 +1,88 @@
+'use client'
+
+import Link from 'next/link'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
+import { useI18n } from '@/lib/i18n/context'
+
+export default function AboutPage() {
+  const { t, locale } = useI18n()
+
+  return (
+    <>
+      <Header />
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <article className="bg-white rounded-lg shadow-md border border-gray-200 p-8 md:p-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-6">{t.about.title}</h1>
+          
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t.about.whatIs}</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              {t.about.whatIsDesc1}
+            </p>
+            <p className="text-gray-700 leading-relaxed">
+              {t.about.whatIsDesc2}
+            </p>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t.about.mission}</h2>
+            <p className="text-gray-700 leading-relaxed">
+              {t.about.missionDesc}
+            </p>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t.about.features}</h2>
+            <ul className="list-disc list-inside space-y-2 text-gray-700">
+              <li><strong>{t.about.featuresList.dataDriven.split(':')[0]}:</strong> {t.about.featuresList.dataDriven.split(':')[1]}</li>
+              <li><strong>{t.about.featuresList.practical.split(':')[0]}:</strong> {t.about.featuresList.practical.split(':')[1]}</li>
+              <li><strong>{t.about.featuresList.expertise.split(':')[0]}:</strong> {t.about.featuresList.expertise.split(':')[1]}</li>
+              <li><strong>{t.about.featuresList.transparency.split(':')[0]}:</strong> {t.about.featuresList.transparency.split(':')[1]}</li>
+              <li><strong>{t.about.featuresList.freshness.split(':')[0]}:</strong> {t.about.featuresList.freshness.split(':')[1]}</li>
+            </ul>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t.about.topics}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {t.about.topicsList.map((topic, idx) => (
+                <div key={idx} className="flex items-start">
+                  <svg className="w-5 h-5 text-blue-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-gray-700">{topic}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="mb-8 p-6 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t.about.disclaimer}</h2>
+            <p className="text-gray-700 leading-relaxed text-sm">
+              {t.about.disclaimerText}
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t.about.contact}</h2>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              {t.about.contactDesc}
+            </p>
+            <Link
+              href={`/${locale}/contact`}
+              className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold transition"
+            >
+              {t.about.contactLink}
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </section>
+        </article>
+      </main>
+      <Footer />
+    </>
+  )
+}
+

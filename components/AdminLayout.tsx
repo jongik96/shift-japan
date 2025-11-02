@@ -29,17 +29,20 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
     // Localhost - check auth
     const auth = localStorage.getItem('admin_authenticated')
+    const locale = pathname.split('/')[1] || 'ko'
+    const loginPath = `/${locale}/admin/login`
     if (auth === 'true') {
       setIsAuthenticated(true)
-    } else if (pathname !== '/admin/login') {
-      router.push('/admin/login')
+    } else if (!pathname.includes('/admin/login')) {
+      router.push(loginPath)
     }
     setLoading(false)
   }, [pathname, router])
 
   const handleLogout = () => {
     localStorage.removeItem('admin_authenticated')
-    router.push('/admin/login')
+    const locale = pathname.split('/')[1] || 'ko'
+    router.push(`/${locale}/admin/login`)
   }
 
   if (loading) {
@@ -52,16 +55,17 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   if (!isLocalhost) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">アクセス禁止</h1>
-          <p className="text-gray-600">管理画面はローカル環境でのみ利用可能です</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="text-center bg-white p-8 rounded-xl shadow-lg max-w-md">
+          <div className="text-6xl mb-4">🚫</div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">접근 제한</h1>
+          <p className="text-gray-600">관리자 페이지는 로컬 환경에서만 사용 가능합니다</p>
         </div>
       </div>
     )
   }
 
-  if (pathname === '/admin/login') {
+  if (pathname.includes('/admin/login')) {
     return <>{children}</>
   }
 
@@ -70,51 +74,62 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-50">
       {/* Admin Header */}
-      <nav className="bg-white border-b border-gray-200">
+      <nav className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
-            <div className="flex">
-              <Link href="/admin" className="flex items-center px-3 py-2 text-xl font-bold text-gray-900">
-                🔐 管理画面
-              </Link>
-              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                <Link
-                  href="/admin"
-                  className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                    pathname === '/admin'
-                      ? 'border-blue-500 text-gray-900'
-                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                  }`}
-                >
-                  記事一覧
-                </Link>
-                <Link
-                  href="/admin/new"
-                  className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                    pathname === '/admin/new'
-                      ? 'border-blue-500 text-gray-900'
-                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                  }`}
-                >
-                  新規投稿
-                </Link>
-              </div>
+            <div className="flex items-center">
+              {(() => {
+                const locale = pathname.split('/')[1] || 'ko'
+                const adminBase = `/${locale}/admin`
+                return (
+                  <>
+                    <Link href={adminBase} className="flex items-center px-3 py-2 text-xl font-bold text-gray-900 hover:text-blue-600 transition">
+                      <span className="text-2xl mr-2">🔐</span>
+                      관리자 패널
+                    </Link>
+                    <div className="hidden sm:ml-8 sm:flex sm:space-x-4">
+                      <Link
+                        href={adminBase}
+                        className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition ${
+                          pathname === adminBase
+                            ? 'bg-blue-50 text-blue-600 border border-blue-200'
+                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        }`}
+                      >
+                        📝 글 목록
+                      </Link>
+                      <Link
+                        href={`${adminBase}/new`}
+                        className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition ${
+                          pathname === `${adminBase}/new`
+                            ? 'bg-blue-50 text-blue-600 border border-blue-200'
+                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        }`}
+                      >
+                        ✏️ 새 글 작성
+                      </Link>
+                    </div>
+                  </>
+                )
+              })()}
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
               <Link
-                href="/"
+                href="/ja"
                 target="_blank"
-                className="text-gray-600 hover:text-gray-900 text-sm"
+                className="text-gray-600 hover:text-blue-600 text-sm font-medium transition flex items-center gap-1"
               >
-                サイトを見る →
+                <span>🌐</span>
+                <span className="hidden sm:inline">사이트 보기</span>
               </Link>
               <button
                 onClick={handleLogout}
-                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition text-sm"
+                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition text-sm font-medium flex items-center gap-2"
               >
-                ログアウト
+                <span>🚪</span>
+                로그아웃
               </button>
             </div>
           </div>

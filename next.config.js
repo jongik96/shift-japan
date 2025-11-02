@@ -9,6 +9,10 @@ const nextConfig = {
       },
     ],
   },
+  // Ensure trailing slash is handled correctly for Vercel
+  trailingSlash: false,
+  // Ensure proper routing
+  reactStrictMode: true,
 }
 
 module.exports = nextConfig
