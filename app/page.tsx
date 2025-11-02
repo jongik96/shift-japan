@@ -1,8 +1,5 @@
-import { redirect } from 'next/navigation'
-
-// Define directly to avoid any Edge Runtime issues
-const defaultLocale = 'ja'
-
+// Root page - middleware handles redirect to /ja
+// This component should rarely execute as middleware redirects / to /ja
 export default function RootPage() {
-  redirect(`/${defaultLocale}`)
+  return null
 }
