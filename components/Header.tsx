@@ -2,9 +2,9 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { useTranslations, useLocale } from 'next-intl'
 import { useParams, usePathname } from 'next/navigation'
-import { locales, type Locale } from '@/i18n'
+import { useTranslations, useLocale } from '@/lib/i18n/hooks'
+import { locales, type Locale } from '@/lib/i18n/config'
 
 const languageNames: Record<Locale, string> = {
   ja: '日本語',

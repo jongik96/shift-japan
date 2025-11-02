@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useTranslations, useLocale } from 'next-intl'
+import { useTranslations, useLocale } from '@/lib/i18n/hooks'
 import { useParams } from 'next/navigation'
 
 export default function Footer() {

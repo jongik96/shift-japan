@@ -6,8 +6,7 @@ import { supabase } from '@/lib/supabase'
 
 // EasyMDE will be loaded dynamically in useEffect
 
-import { type Locale } from '@/i18n'
-import { locales } from '@/i18n'
+import { type Locale, locales } from '@/lib/i18n/config'
 import { getTableName } from '@/lib/i18n/routing'
 
 const categoriesByLocale: Record<Locale, string[]> = {

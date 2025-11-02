@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { useTranslations, useLocale } from 'next-intl'
+import { useTranslations, useLocale } from '@/lib/i18n/hooks'
 
 export default function AboutPage() {
   const t = useTranslations()

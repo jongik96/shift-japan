@@ -2,7 +2,7 @@
 
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@/lib/i18n/hooks'
 
 export default function ContactPage() {
   const t = useTranslations()

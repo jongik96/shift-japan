@@ -8,7 +8,7 @@ import ShareBar from '@/components/ShareBar'
 import MobileTOCButton from '@/components/MobileTOCButton'
 import { TOCItem } from '@/lib/types'
 import { Locale } from '@/lib/i18n/routing'
-import { useTranslations } from 'next-intl'
+import { useTranslations } from '@/lib/i18n/hooks'
 
 interface ReportClientProps {
   report: any

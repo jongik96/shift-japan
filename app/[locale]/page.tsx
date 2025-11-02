@@ -5,7 +5,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import ReportCard from '@/components/ReportCard'
 import { supabase } from '@/lib/supabase'
-import { useTranslations, useLocale } from 'next-intl'
+import { useTranslations, useLocale } from '@/lib/i18n/hooks'
 import { getTableName, Locale } from '@/lib/i18n/routing'
 import { useParams } from 'next/navigation'
 
