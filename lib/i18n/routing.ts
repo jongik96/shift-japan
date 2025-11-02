@@ -1,14 +1,14 @@
-// This file is used by Client Components only
-// Server Components should define constants directly to avoid Edge Runtime issues
+// Simple routing utilities - Edge Runtime compatible
+// This file MUST NOT use any Node.js APIs or cause Edge Runtime issues
 
 export type Locale = 'ja' | 'en' | 'ko'
 
-// Use direct array initialization to avoid potential Edge Runtime issues
-export const locales = ['ja', 'en', 'ko'] as const satisfies readonly Locale[]
+// Define as const to avoid any potential issues
+export const locales: readonly Locale[] = ['ja', 'en', 'ko'] as const
 export const defaultLocale: Locale = 'ja'
 
 export function isValidLocale(locale: string): locale is Locale {
-  return (locales as readonly string[]).includes(locale)
+  return locale === 'ja' || locale === 'en' || locale === 'ko'
 }
 
 export function getTableName(locale: Locale): string {
