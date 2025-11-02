@@ -1,5 +1,8 @@
+const { i18n } = require('./next-i18next.config')
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  i18n,
   images: {
     domains: ['images.unsplash.com', 'cdn.pixabay.com'],
     remotePatterns: [
@@ -13,9 +16,6 @@ const nextConfig = {
   trailingSlash: false,
   // Ensure proper routing
   reactStrictMode: true,
-  // NOTE: i18n config in next.config.js only works with Pages Router (pages/ directory)
-  // This project uses App Router (app/ directory), so middleware is required for i18n routing
-  // Middleware with Node.js runtime handles all locale routing and redirects
 }
 
 module.exports = nextConfig
