@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation'
-import { defaultLocale } from '@/lib/i18n/config'
+
+// Define directly to avoid any Edge Runtime issues
+const defaultLocale = 'ja'
 
 export default function RootPage() {
   redirect(`/${defaultLocale}`)

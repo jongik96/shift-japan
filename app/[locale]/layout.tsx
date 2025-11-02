@@ -1,5 +1,9 @@
 import { notFound } from 'next/navigation'
-import { isValidLocale } from '@/lib/i18n/config'
+
+// Edge Runtime compatible validation - defined directly
+function isValidLocale(locale: string): boolean {
+  return locale === 'ja' || locale === 'en' || locale === 'ko'
+}
 
 export default function LocaleLayout({
   children,
@@ -10,7 +14,7 @@ export default function LocaleLayout({
 }) {
   const locale = params.locale
 
-  // Validate locale (Edge Runtime compatible)
+  // Validate locale
   if (!isValidLocale(locale)) {
     notFound()
   }
