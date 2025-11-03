@@ -6,6 +6,9 @@ import { getTableName } from '@/lib/i18n/config'
 import { supabase } from '@/lib/supabase'
 import HomeClient from './HomeClient'
 
+// Node 런타임으로 명시 (Edge Runtime 호환성 문제 해결용)
+export const runtime = 'nodejs'
+
 interface PageProps {
   params: { locale: string }
 }
