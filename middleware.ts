@@ -19,40 +19,39 @@ const DEFAULT_LOCALE = 'ja'
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
-  // 정적 파일, API, favicon 등은 제외
+  // 정적 파일, API 요청 등은 제외
   if (
     pathname.startsWith('/api') ||
     pathname.startsWith('/_next') ||
-    pathname.startsWith('/favicon.ico') ||
-    pathname.startsWith('/favicon.png') ||
-    pathname.startsWith('/shiftjapan-') || // favicon, og 이미지 등
-    pathname.match(/\.(ico|png|jpg|jpeg|gif|svg|webp|woff|woff2|ttf|eot)$/i) // 모든 정적 파일 확장자
+    pathname.match(/\.(?:ico|png|jpg|jpeg|gif|svg|webp|woff|woff2|ttf|eot)$/i)
   ) {
     return NextResponse.next()
   }
 
-  // 이미 언어 prefix가 있으면 그대로 통과
-  const pathnameIsMissingLocale = SUPPORTED_LOCALES.every(
-    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
+  // 이미 언어 prefix가 있는지 확인
+  const hasLocale = SUPPORTED_LOCALES.some(
+    (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)
   )
 
-  if (pathnameIsMissingLocale) {
+  if (!hasLocale) {
     // 브라우저 언어 감지
     const lang =
       req.headers.get('accept-language')?.split(',')[0].split('-')[0] || DEFAULT_LOCALE
 
     const locale = SUPPORTED_LOCALES.includes(lang) ? lang : DEFAULT_LOCALE
 
-    // 리다이렉트
-    return NextResponse.redirect(new URL(`/${locale}${pathname}`, req.url))
+    // 안전한 리다이렉트: req.nextUrl.clone() 사용 및 중복 슬래시 방지
+    const url = req.nextUrl.clone()
+    url.pathname = pathname === '/' ? `/${locale}` : `/${locale}${pathname}`
+    return NextResponse.redirect(url)
   }
 
   return NextResponse.next()
 }
 
 export const config = {
-  // 정적 파일 확장자 제외 (non-capturing group 사용)
+  // 정적 파일 확장자 제외 (단순화된 패턴)
   matcher: [
-    '/((?!_next|api|favicon|.*\\.(?:ico|png|jpg|jpeg|gif|svg|webp|woff|woff2|ttf|eot)).*)',
+    '/((?!api|_next|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|svg|webp|ico|woff2?|ttf|eot)$).*)',
   ],
 }
