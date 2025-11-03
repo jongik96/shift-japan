@@ -15,6 +15,11 @@ export const metadata: Metadata = {
   authors: [{ name: 'Shift Japan Insight' }],
   creator: 'Shift Japan Insight',
   publisher: 'Shift Japan Insight',
+  icons: {
+    icon: '/shiftjapan-favi.png',
+    shortcut: '/shiftjapan-favi.png',
+    apple: '/shiftjapan-favi.png',
+  },
   formatDetection: {
     email: false,
     address: false,

@@ -23,7 +23,10 @@ export function middleware(req: NextRequest) {
   if (
     pathname.startsWith('/api') ||
     pathname.startsWith('/_next') ||
-    pathname.startsWith('/favicon.ico')
+    pathname.startsWith('/favicon.ico') ||
+    pathname.startsWith('/favicon.png') ||
+    pathname.startsWith('/shiftjapan-') || // favicon, og 이미지 등
+    pathname.match(/\.(ico|png|jpg|jpeg|gif|svg|webp|woff|woff2|ttf|eot)$/i) // 모든 정적 파일 확장자
   ) {
     return NextResponse.next()
   }
@@ -48,5 +51,8 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next|api|favicon.ico).*)'],
+  // 정적 파일 확장자 제외
+  matcher: [
+    '/((?!_next|api|favicon|.*\\.(ico|png|jpg|jpeg|gif|svg|webp|woff|woff2|ttf|eot)).*)',
+  ],
 }
