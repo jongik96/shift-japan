@@ -1,3 +1,12 @@
+/**
+ * i18n 설정 파일
+ * 
+ * 주의: 이 파일은 middleware.ts에서 import되지 않습니다.
+ * - middleware.ts는 Edge Runtime에서 실행되므로 독립적으로 작동해야 함
+ * - 이 파일은 서버 컴포넌트(app/[locale]/*)와 클라이언트 컴포넌트에서만 사용
+ * - Edge Runtime 안전 (__dirname, path, fs 사용 없음)
+ */
+
 export type Locale = 'ja' | 'en' | 'ko'
 
 export const locales: Locale[] = ['ja', 'en', 'ko']

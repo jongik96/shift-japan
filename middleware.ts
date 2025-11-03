@@ -1,6 +1,18 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
+/**
+ * Edge Runtime 안전한 middleware
+ * 
+ * 중요: 이 파일은 절대 다른 파일을 import하지 않습니다.
+ * - lib/i18n/* 파일들을 import하지 않음
+ * - Node.js API (fs, path, __dirname) 사용하지 않음
+ * - 오직 Next.js 공식 타입만 사용 (NextResponse, NextRequest)
+ * 
+ * 이렇게 해야 Edge Runtime에서 안전하게 실행됩니다.
+ */
+
+// Edge Runtime에서 직접 정의 - 다른 파일 import 금지
 const SUPPORTED_LOCALES = ['ja', 'en', 'ko']
 const DEFAULT_LOCALE = 'ja'
 
