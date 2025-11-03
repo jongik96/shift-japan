@@ -51,8 +51,8 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // 정적 파일 확장자 제외
+  // 정적 파일 확장자 제외 (non-capturing group 사용)
   matcher: [
-    '/((?!_next|api|favicon|.*\\.(ico|png|jpg|jpeg|gif|svg|webp|woff|woff2|ttf|eot)).*)',
+    '/((?!_next|api|favicon|.*\\.(?:ico|png|jpg|jpeg|gif|svg|webp|woff|woff2|ttf|eot)).*)',
   ],
 }
