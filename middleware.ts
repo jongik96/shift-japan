@@ -22,10 +22,11 @@ export function middleware(req: NextRequest) {
   // 디버깅: pathname 확인
   console.log('MIDDLEWARE PATHNAME:', pathname)
 
-  // 정적 파일, API 요청 등은 제외
+  // 정적 파일, API 요청, 시스템 경로 등은 제외
   if (
     pathname.startsWith('/api') ||
     pathname.startsWith('/_next') ||
+    pathname.startsWith('/.well-known') || // 시스템 경로 (Chrome DevTools 등)
     pathname.match(/\.(?:ico|png|jpg|jpeg|gif|svg|webp|woff|woff2|ttf|eot)$/i)
   ) {
     return NextResponse.next()
@@ -58,8 +59,8 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // 정적 파일 확장자 제외 (최대한 단순화된 패턴 - favicon 조건 제거)
+  // 정적 파일 확장자 및 시스템 경로 제외
   matcher: [
-    '/((?!api|_next|.*\\.(?:png|jpg|jpeg|gif|svg|ico|woff2?|ttf|eot)$).*)',
+    '/((?!api|_next|\\.well-known|.*\\.(?:png|jpg|jpeg|gif|svg|ico|woff2?|ttf|eot)$).*)',
   ],
 }
