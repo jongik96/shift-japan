@@ -19,6 +19,9 @@ const DEFAULT_LOCALE = 'ja'
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
+  // 디버깅: pathname 확인
+  console.log('MIDDLEWARE PATHNAME:', pathname)
+
   // 정적 파일, API 요청 등은 제외
   if (
     pathname.startsWith('/api') ||
@@ -33,6 +36,8 @@ export function middleware(req: NextRequest) {
     (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)
   )
 
+  console.log('HAS_LOCALE:', hasLocale)
+
   if (!hasLocale) {
     // 브라우저 언어 감지
     const lang =
@@ -43,6 +48,9 @@ export function middleware(req: NextRequest) {
     // 안전한 리다이렉트: req.nextUrl.clone() 사용 및 중복 슬래시 방지
     const url = req.nextUrl.clone()
     url.pathname = pathname === '/' ? `/${locale}` : `/${locale}${pathname}`
+
+    console.log('REDIRECT TO:', url.toString())
+
     return NextResponse.redirect(url)
   }
 
@@ -50,8 +58,8 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // 정적 파일 확장자 제외 (단순화된 패턴)
+  // 정적 파일 확장자 제외 (최대한 단순화된 패턴 - favicon 조건 제거)
   matcher: [
-    '/((?!api|_next|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|svg|webp|ico|woff2?|ttf|eot)$).*)',
+    '/((?!api|_next|.*\\.(?:png|jpg|jpeg|gif|svg|ico|woff2?|ttf|eot)$).*)',
   ],
 }

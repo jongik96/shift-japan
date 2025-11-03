@@ -109,10 +109,93 @@ npm run build
 1. **Next.js 빌드 산출물 문제**: Next.js가 내부적으로 favicon을 처리할 때 `__dirname` 사용
 2. **Vercel 빌드 캐시**: 이전 빌드의 잘못된 코드가 캐시됨
 
+## 6. Redirect 루프 및 URL 파싱 오류 진단
+
+### 문제
+`req.nextUrl.clone()` 사용해도 여전히 500이면, pathname이나 req.nextUrl이 예상과 다를 수 있습니다.
+
+### 디버깅 로그
+
+현재 `middleware.ts`에 디버깅 로그가 포함되어 있습니다:
+
+```javascript
+console.log('MIDDLEWARE PATHNAME:', pathname)
+console.log('HAS_LOCALE:', hasLocale)
+console.log('REDIRECT TO:', url.toString())
+```
+
+### 로그 확인 방법
+
+1. **로컬 개발:**
+   ```bash
+   npm run dev
+   # 터미널에서 로그 확인
+   ```
+
+2. **Vercel 배포:**
+   - Vercel 대시보드 → Functions 탭 → Runtime Logs
+   - 또는 Vercel CLI: `vercel logs`
+
+### 로그 해석
+
+#### ✅ 정상 동작
+```
+MIDDLEWARE PATHNAME: /
+HAS_LOCALE: false
+REDIRECT TO: https://example.com/ja
+```
+
+#### ❌ 무한 루프 (같은 URL 반복)
+```
+MIDDLEWARE PATHNAME: /ja
+HAS_LOCALE: false
+REDIRECT TO: https://example.com/ja
+MIDDLEWARE PATHNAME: /ja
+HAS_LOCALE: false
+REDIRECT TO: https://example.com/ja
+...
+```
+→ `hasLocale` 체크 로직 문제 가능성
+
+#### ❌ 잘못된 URL (중복 슬래시)
+```
+MIDDLEWARE PATHNAME: //
+REDIRECT TO: https://example.com//ja
+```
+→ `pathname === '/'` 체크 미작동
+
+#### ❌ REDIRECT TO 직후 500 에러
+→ `url.toString()` 단계에서 잘못된 URL 생성
+→ `req.nextUrl.clone()` 사용 확인
+
+## 7. config.matcher 구문 문제
+
+### 문제
+일부 Next.js 버전에서 괄호 그룹이 많을 때 Edge parser가 실패할 수 있습니다.
+
+### 해결
+matcher를 최대한 단순화:
+
+```javascript
+export const config = {
+  matcher: [
+    '/((?!api|_next|.*\\.(?:png|jpg|jpeg|gif|svg|ico|woff2?|ttf|eot)$).*)',
+  ],
+}
+```
+
+### 테스트 순서
+1. favicon 조건 제거 (완료됨)
+2. 빌드 테스트
+3. 문제 지속 시 확장자 목록 축소
+
 ## 해결 순서
 
 1. ✅ `app/layout.tsx`에 favicon 메타데이터 추가 (완료)
-2. → Vercel 재배포
-3. → 문제 지속 시 middleware 임시 비활성화로 원인 분리
-4. → 필요 시 `next.config.js`에 `experimental.runtime: 'nodejs'` 임시 추가 (테스트용)
+2. ✅ 디버깅 로그 추가 (완료)
+3. ✅ matcher 정규식 단순화 (완료)
+4. → Vercel 재배포
+5. → Vercel 로그에서 디버깅 출력 확인
+6. → 문제 지속 시 middleware 임시 비활성화로 원인 분리
+7. → 필요 시 `next.config.js`에 `experimental.runtime: 'nodejs'` 임시 추가 (테스트용)
 
