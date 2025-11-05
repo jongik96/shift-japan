@@ -1,5 +1,7 @@
 import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
+import Script from 'next/script'
+import { Analytics } from '@vercel/analytics/react'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -58,6 +60,9 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  verification: {
+    google: 'kxYDEGmU5I0gGHfz2Xg9ZpI68S9LuPuORnlUeEQ2I04',
+  },
 }
 
 export default function RootLayout({
@@ -67,7 +72,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {/* Google AdSense */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8843011911940029"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+        {children}
+        <Analytics />
+      </body>
     </html>
   )
 }
