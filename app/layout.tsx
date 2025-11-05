@@ -73,12 +73,25 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={inter.className}>
-        {/* Google AdSense */}
+        {/* Google AdSense - Script를 먼저 로드 */}
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8843011911940029"
           crossOrigin="anonymous"
           strategy="afterInteractive"
+        />
+        {/* Google AdSense 초기화 코드 */}
+        <Script
+          id="adsbygoogle-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (adsbygoogle = window.adsbygoogle || []).push({
+                google_ad_client: "ca-pub-8843011911940029",
+                enable_page_level_ads: true
+              });
+            `,
+          }}
         />
         {children}
         <Analytics />
