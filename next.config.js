@@ -15,11 +15,16 @@ const nextConfig = {
   experimental: {
     // Edge Runtime 안정성 향상
   },
-  // favicon.ico 요청을 shiftjapan-favi.png로 리다이렉트
+  // favicon 요청 리다이렉트 설정
   async redirects() {
     return [
       {
         source: '/favicon.ico',
+        destination: '/shiftjapan-favi.png',
+        permanent: true,
+      },
+      {
+        source: '/favicon.png',
         destination: '/shiftjapan-favi.png',
         permanent: true,
       },
