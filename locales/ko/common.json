@@ -1,0 +1,121 @@
+{
+  "nav": {
+    "blog": "블로그",
+    "about": "서비스 소개",
+    "contact": "문의하기",
+    "menu": "메뉴"
+  },
+  "home": {
+    "title": "Shift Japan Insight",
+    "subtitle": "일본 이직·이주 전문 분석 리포트",
+    "searchPlaceholder": "키워드로 검색...",
+    "searchResults": "개의 기사를 찾았습니다",
+    "loading": "로딩 중...",
+    "noResults": {
+      "title": "기사를 찾을 수 없습니다",
+      "description": "검색 조건을 변경해 주세요"
+    },
+    "categories": {
+      "all": "전체",
+      "announcement": "공지",
+      "residence": "이주·생활",
+      "career": "커리어·비즈니스",
+      "finance": "금융·투자",
+      "tax": "세무·법령",
+      "culture": "문화·사회",
+      "data": "데이터 분석",
+      "travel": "여행",
+      "food": "맛집"
+    }
+  },
+  "report": {
+    "published": "발행일:",
+    "relatedTags": "관련 태그",
+    "sources": "참고 자료",
+    "notFound": "리포트를 찾을 수 없습니다",
+    "backToList": "글 목록으로 돌아가기"
+  },
+  "category": {
+    "backToList": "← 카테고리 목록으로 돌아가기",
+    "description": "전문 분석 리포트",
+    "noReports": "이 카테고리에는 아직 리포트가 없습니다",
+    "viewAll": "모든 리포트 보기 →",
+    "notFound": "카테고리를 찾을 수 없습니다"
+  },
+  "about": {
+    "title": "서비스 소개",
+    "whatIs": "🇯🇵 Shift Japan Insight란",
+    "whatIsDesc1": "Shift Japan Insight는 일본으로의 이주, 이직, 커리어 구축을 고려하는 분들을 위해 데이터 기반의 깊은 통찰과 전문적인 분석을 제공하는 플랫폼입니다.",
+    "whatIsDesc2": "표면적인 정보가 아닌 실제 데이터, 통계, 전문가의 관점을 통해 일본에서의 성공을 지원하는 것을 목표로 합니다.",
+    "mission": "우리의 미션",
+    "missionDesc": "일본에서의 이주·이직을 고려하는 모든 사람이 신뢰할 수 있는 정보를 바탕으로 의사결정을 할 수 있도록 전문적이고 실용적인 콘텐츠를 제공합니다.",
+    "features": "콘텐츠 특징",
+    "featuresList": {
+      "dataDriven": "데이터 기반: 통계 및 트렌드 데이터에 기반한 분석",
+      "practical": "실용적: 실제로 활용할 수 있는 구체적인 정보",
+      "expertise": "전문성: E-A-T(전문성·권위성·신뢰성) 중시",
+      "transparency": "투명성: 모든 참고 자료 명시",
+      "freshness": "최신성: 최신 법령 및 제도 대응"
+    },
+    "topics": "다루는 주제",
+    "topicsList": [
+      "일본 이주 및 비자 취득",
+      "이직 시장 및 커리어 전략",
+      "금융 상품 및 투자 전략",
+      "세무 제도 및 절세 대책",
+      "사회보험 및 연금 제도",
+      "일본 비즈니스 문화",
+      "주거·부동산 시장",
+      "의료 제도 및 건강 관리"
+    ],
+    "disclaimer": "면책 조항",
+    "disclaimerText": "이 사이트의 정보는 교육 목적으로 제공됩니다. 개별 법률, 세무, 재무 관련 결정을 내리기 전에 반드시 적절한 전문가와 상담하시기 바랍니다. 본 사이트는 제공된 정보 사용으로 인해 발생하는 모든 손해에 대해 책임을 지지 않습니다.",
+    "contact": "문의하기",
+    "contactDesc": "질문, 의견 또는 콘텐츠 관련 제안이 있으시면 언제든지 연락해 주세요.",
+    "contactLink": "문의 페이지로 이동"
+  },
+  "contact": {
+    "title": "문의하기",
+    "description": "질문, 의견, 문의 사항이 있으시면 언제든지 연락해 주세요",
+    "responseTime": "※ 문의에 대한 답변까지 최대 1주일 정도 소요될 수 있습니다.",
+    "sendEmail": "이메일로 문의하기",
+    "name": "이름",
+    "email": "이메일 주소",
+    "subject": "제목",
+    "message": "메시지",
+    "required": "*",
+    "selectSubject": "선택해 주세요",
+    "subjects": {
+      "general": "일반 문의",
+      "content": "콘텐츠 관련 의견",
+      "technical": "기술적 문제",
+      "other": "기타"
+    },
+    "sending": "전송 중...",
+    "send": "전송하기",
+    "success": "문의해 주셔서 감사합니다. 곧 연락드리겠습니다.",
+    "contactInfo": "연락처",
+    "emailLabel": "이메일:"
+  },
+  "footer": {
+    "description": "일본 이주, 이직, 커리어에 대한 깊은 통찰과 데이터 분석을 제공하는 전문 블로그",
+    "links": "링크",
+    "other": "기타",
+    "privacy": "개인정보 처리방침",
+    "terms": "이용약관",
+    "rights": "All rights reserved."
+  },
+  "notFound": {
+    "title": "페이지를 찾을 수 없습니다",
+    "description": "찾고 계신 페이지가 존재하지 않거나 이동되었을 수 있습니다.",
+    "home": "홈으로 돌아가기",
+    "reports": "리포트 목록"
+  },
+  "language": {
+    "select": "언어 선택",
+    "ja": "日本語",
+    "en": "English",
+    "ko": "한국어"
+  }
+}
+

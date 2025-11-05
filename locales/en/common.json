@@ -1,0 +1,121 @@
+{
+  "nav": {
+    "blog": "Blog",
+    "about": "About",
+    "contact": "Contact",
+    "menu": "Menu"
+  },
+  "home": {
+    "title": "Shift Japan Insight",
+    "subtitle": "Professional Analysis Reports on Japan Career & Migration",
+    "searchPlaceholder": "Search by keyword...",
+    "searchResults": "articles found",
+    "loading": "Loading...",
+    "noResults": {
+      "title": "No articles found",
+      "description": "Please try changing your search criteria"
+    },
+    "categories": {
+      "all": "All",
+      "announcement": "Announcement",
+      "residence": "Migration & Living",
+      "career": "Career & Business",
+      "finance": "Finance & Investment",
+      "tax": "Tax & Legal",
+      "culture": "Culture & Society",
+      "data": "Data Analysis",
+      "travel": "Travel",
+      "food": "Food & Dining"
+    }
+  },
+  "report": {
+    "published": "Published:",
+    "relatedTags": "Related Tags",
+    "sources": "Sources",
+    "notFound": "Report not found",
+    "backToList": "Back to Article List"
+  },
+  "category": {
+    "backToList": "← Back to Categories",
+    "description": "Professional Analysis Reports",
+    "noReports": "No reports in this category yet",
+    "viewAll": "View all reports →",
+    "notFound": "Category not found"
+  },
+  "about": {
+    "title": "About Us",
+    "whatIs": "🇯🇵 What is Shift Japan Insight",
+    "whatIsDesc1": "Shift Japan Insight is a platform that provides data-driven insights and professional analysis for those considering migration, career change, and career building in Japan.",
+    "whatIsDesc2": "We aim to support success in Japan through real data, statistics, and expert perspectives, rather than superficial information.",
+    "mission": "Our Mission",
+    "missionDesc": "We provide professional and practical content so that everyone considering migration or career change in Japan can make decisions based on reliable information.",
+    "features": "Content Features",
+    "featuresList": {
+      "dataDriven": "Data-driven: Analysis based on statistics and trend data",
+      "practical": "Practical: Concrete information that can be put to use",
+      "expertise": "Expertise: Emphasis on E-A-T (Expertise, Authoritativeness, Trustworthiness)",
+      "transparency": "Transparency: All sources are clearly stated",
+      "freshness": "Freshness: Responds to the latest laws and systems"
+    },
+    "topics": "Topics Covered",
+    "topicsList": [
+      "Migration to Japan and Visa Acquisition",
+      "Job Market and Career Strategy",
+      "Financial Products and Investment Strategy",
+      "Tax System and Tax Saving Measures",
+      "Social Insurance and Pension System",
+      "Japanese Business Culture",
+      "Housing & Real Estate Market",
+      "Healthcare System and Health Management"
+    ],
+    "disclaimer": "Disclaimer",
+    "disclaimerText": "The information on this site is provided for educational purposes. Please consult with appropriate professionals before making individual legal, tax, or financial decisions. This site is not responsible for any damages arising from the use of the information provided.",
+    "contact": "Contact",
+    "contactDesc": "If you have any questions, opinions, or suggestions regarding content, please feel free to contact us.",
+    "contactLink": "Go to Contact Page"
+  },
+  "contact": {
+    "title": "Contact",
+    "description": "If you have any questions, opinions, or inquiries, please feel free to contact us",
+    "responseTime": "※ Response to inquiries may take up to approximately 1 week.",
+    "sendEmail": "Contact by Email",
+    "name": "Name",
+    "email": "Email Address",
+    "subject": "Subject",
+    "message": "Message",
+    "required": "*",
+    "selectSubject": "Please select",
+    "subjects": {
+      "general": "General Inquiry",
+      "content": "Content Feedback",
+      "technical": "Technical Issue",
+      "other": "Other"
+    },
+    "sending": "Sending...",
+    "send": "Send",
+    "success": "Thank you for your inquiry. We will contact you shortly.",
+    "contactInfo": "Contact Information",
+    "emailLabel": "Email:"
+  },
+  "footer": {
+    "description": "A specialized blog providing deep insights and data analysis on migration, career change, and careers in Japan",
+    "links": "Links",
+    "other": "Other",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "rights": "All rights reserved."
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "The page you are looking for does not exist or may have been moved.",
+    "home": "Back to Home",
+    "reports": "Report List"
+  },
+  "language": {
+    "select": "Select Language",
+    "ja": "日本語",
+    "en": "English",
+    "ko": "한국어"
+  }
+}
+

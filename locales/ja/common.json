@@ -1,0 +1,121 @@
+{
+  "nav": {
+    "blog": "ブログ",
+    "about": "サービスについて",
+    "contact": "お問い合わせ",
+    "menu": "メニュー"
+  },
+  "home": {
+    "title": "Shift Japan Insight",
+    "subtitle": "日本転職・移住の専門分析レポート",
+    "searchPlaceholder": "キーワードで検索...",
+    "searchResults": "件の記事が見つかりました",
+    "loading": "読み込み中...",
+    "noResults": {
+      "title": "記事が見つかりませんでした",
+      "description": "検索条件を変更してお試しください"
+    },
+    "categories": {
+      "all": "すべて",
+      "announcement": "お知らせ",
+      "residence": "移住・生活",
+      "career": "キャリア・ビジネス",
+      "finance": "金融・投資",
+      "tax": "税務・法令",
+      "culture": "文化・社会",
+      "data": "データ分析",
+      "travel": "旅行",
+      "food": "グルメ・飲食"
+    }
+  },
+  "report": {
+    "published": "公開日:",
+    "relatedTags": "関連タグ",
+    "sources": "参照元",
+    "notFound": "レポートが見つかりません",
+    "backToList": "記事一覧に戻る"
+  },
+  "category": {
+    "backToList": "← カテゴリー一覧に戻る",
+    "description": "に関する専門分析レポート",
+    "noReports": "このカテゴリーにはまだレポートがありません",
+    "viewAll": "すべてのレポートを見る →",
+    "notFound": "カテゴリーが見つかりません"
+  },
+  "about": {
+    "title": "サービスについて",
+    "whatIs": "🇯🇵 Shift Japan Insight とは",
+    "whatIsDesc1": "Shift Japan Insight は、日本への移住、転職、キャリア構築を検討している方々のために、データに基づく深い洞察と専門的な分析を提供するプラットフォームです。",
+    "whatIsDesc2": "表面的な情報ではなく、実際のデータ、統計、専門家の視点を通じて、日本での成功を支援することを目指しています。",
+    "mission": "私たちのミッション",
+    "missionDesc": "日本での移住・転職を検討するすべての人が、信頼できる情報に基づいて意思決定できるよう、専門的で実用的なコンテンツを提供します。",
+    "features": "コンテンツの特徴",
+    "featuresList": {
+      "dataDriven": "データ駆動: 統計やトレンドデータに基づく分析",
+      "practical": "実践的: 実際に活用できる具体的な情報",
+      "expertise": "専門性: E-A-T（専門性・権威性・信頼性）を重視",
+      "transparency": "透明性: すべての参照元を明示",
+      "freshness": "最新性: 最新の法令や制度に対応"
+    },
+    "topics": "カバーするトピック",
+    "topicsList": [
+      "日本への移住とビザ取得",
+      "転職市場とキャリア戦略",
+      "金融商品と投資戦略",
+      "税務制度と節税対策",
+      "社会保険と年金制度",
+      "日本のビジネス文化",
+      "住宅・不動産市場",
+      "医療制度と健康管理"
+    ],
+    "disclaimer": "免責事項",
+    "disclaimerText": "このサイトの情報は教育目的で提供されています。個別の法的、税務、財務に関する決定を行う前に、必ず適切な専門家に相談してください。当サイトは、提供された情報の使用から生じるいかなる損害についても責任を負いません。",
+    "contact": "お問い合わせ",
+    "contactDesc": "ご質問、ご意見、またはコンテンツに関するご提案がございましたら、お気軽にお問い合わせください。",
+    "contactLink": "お問い合わせページへ"
+  },
+  "contact": {
+    "title": "お問い合わせ",
+    "description": "ご質問、ご意見、お問い合わせがございましたら、お気軽にご連絡ください",
+    "responseTime": "※ お問い合わせへの回答まで、最大1週間程度お時間をいただく場合がございます。",
+    "sendEmail": "メールでお問い合わせ",
+    "name": "お名前",
+    "email": "メールアドレス",
+    "subject": "件名",
+    "message": "メッセージ",
+    "required": "*",
+    "selectSubject": "選択してください",
+    "subjects": {
+      "general": "一般のお問い合わせ",
+      "content": "コンテンツに関するご意見",
+      "technical": "技術的な問題",
+      "other": "その他"
+    },
+    "sending": "送信中...",
+    "send": "送信する",
+    "success": "お問い合わせありがとうございます。後日ご連絡いたします。",
+    "contactInfo": "お問い合わせ先",
+    "emailLabel": "メール:"
+  },
+  "footer": {
+    "description": "日本への移住、転職、キャリアに関する深い洞察とデータ分析を提供する専門ブログ",
+    "links": "リンク",
+    "other": "その他",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約",
+    "rights": "All rights reserved."
+  },
+  "notFound": {
+    "title": "ページが見つかりません",
+    "description": "お探しのページは存在しないか、移動された可能性があります。",
+    "home": "ホームに戻る",
+    "reports": "レポート一覧"
+  },
+  "language": {
+    "select": "言語を選択",
+    "ja": "日本語",
+    "en": "English",
+    "ko": "한국어"
+  }
+}
+
