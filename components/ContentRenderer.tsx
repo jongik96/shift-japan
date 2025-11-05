@@ -165,10 +165,10 @@ export default function ContentRenderer({ blocks, onHeadingRender }: ContentRend
       case 'paragraph':
         // Check if paragraph contains only a URL (for link preview cards)
         // Use trimEnd() to preserve leading/trailing newlines but remove trailing spaces
-        const text = block.content.text.trimEnd()
+        const text = block.content.text || ''
         const trimmedForUrlCheck = text.trim()
         
-        // Check for standalone URL
+        // Check for standalone URL - 더 강력한 패턴 매칭
         const urlPattern = /^https?:\/\/[^\s]+$/i
         const isStandaloneUrl = urlPattern.test(trimmedForUrlCheck)
         
@@ -178,14 +178,16 @@ export default function ContentRenderer({ blocks, onHeadingRender }: ContentRend
         const isMarkdownLink = markdownLinkMatch !== null && 
           (markdownLinkMatch[2].startsWith('http://') || markdownLinkMatch[2].startsWith('https://'))
         
-        // Debug: Log URL detection (remove in production)
-        // console.log('Paragraph block:', {
-        //   original: JSON.stringify(block.content.text),
-        //   trimmed: trimmedForUrlCheck,
-        //   isStandaloneUrl,
-        //   isMarkdownLink,
-        //   markdownLinkMatch
-        // })
+        // Debug: Log URL detection (디버깅 활성화)
+        console.log('🔍 Paragraph block URL 감지:', {
+          original: JSON.stringify(block.content.text),
+          text: text,
+          trimmed: trimmedForUrlCheck,
+          isStandaloneUrl,
+          isMarkdownLink,
+          markdownLinkMatch,
+          urlPatternTest: urlPattern.test(trimmedForUrlCheck)
+        })
         
         // Check if text contains markdown table
         // Table pattern: has pipe characters, separator row with dashes/colons, and data rows
@@ -361,6 +363,7 @@ export default function ContentRenderer({ blocks, onHeadingRender }: ContentRend
         if (isStandaloneUrl) {
           // Use trimmed URL for href to ensure clean URL
           const cleanUrl = trimmedForUrlCheck
+          console.log('✅ Standalone URL 감지됨, LinkPreviewCard 렌더링:', cleanUrl)
           return (
             <div key={index} className="mb-6">
               <LinkPreviewCard href={cleanUrl}>{cleanUrl}</LinkPreviewCard>
@@ -372,9 +375,20 @@ export default function ContentRenderer({ blocks, onHeadingRender }: ContentRend
         if (isMarkdownLink && markdownLinkMatch) {
           const linkText = markdownLinkMatch[1]
           const linkUrl = markdownLinkMatch[2]
+          console.log('✅ Markdown link 감지됨, LinkPreviewCard 렌더링:', linkUrl)
           return (
             <div key={index} className="mb-6">
               <LinkPreviewCard href={linkUrl}>{linkText}</LinkPreviewCard>
+            </div>
+          )
+        }
+        
+        // URL이 감지되지 않았지만, 텍스트가 URL처럼 보이면 강제로 체크
+        if (trimmedForUrlCheck && (trimmedForUrlCheck.startsWith('http://') || trimmedForUrlCheck.startsWith('https://'))) {
+          console.log('⚠️ URL 패턴이지만 감지되지 않음, 강제로 LinkPreviewCard 렌더링:', trimmedForUrlCheck)
+          return (
+            <div key={index} className="mb-6">
+              <LinkPreviewCard href={trimmedForUrlCheck}>{trimmedForUrlCheck}</LinkPreviewCard>
             </div>
           )
         }

@@ -3,6 +3,7 @@
 import { ReactNode, useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
+import 'easymde/dist/easymde.min.css'
 
 interface AdminLayoutProps {
   children: ReactNode
@@ -28,21 +29,28 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     }
 
     // Localhost - check auth
+    // 관리자 페이지는 항상 /ko로 접근
     const auth = localStorage.getItem('admin_authenticated')
-    const locale = pathname?.split('/')[1] || 'ko'
-    const loginPath = `/${locale}/admin/login`
+    const currentLocale = pathname?.split('/')[1]
+    
+    // /ko가 아니면 /ko/admin으로 리다이렉트
+    if (currentLocale && currentLocale !== 'ko') {
+      const newPath = pathname.replace(`/${currentLocale}/admin`, '/ko/admin')
+      router.push(newPath)
+      return
+    }
+    
     if (auth === 'true') {
       setIsAuthenticated(true)
     } else if (pathname && !pathname.includes('/admin/login')) {
-      router.push(loginPath)
+      router.push('/ko/admin/login')
     }
     setLoading(false)
   }, [pathname, router])
 
   const handleLogout = () => {
     localStorage.removeItem('admin_authenticated')
-    const locale = pathname?.split('/')[1] || 'ko'
-    router.push(`/${locale}/admin/login`)
+    router.push('/ko/admin/login')
   }
 
   if (loading) {
@@ -80,40 +88,34 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              {(() => {
-                const locale = pathname?.split('/')[1] || 'ko'
-                const adminBase = `/${locale}/admin`
-                return (
-                  <>
-                    <Link href={adminBase} className="flex items-center px-3 py-2 text-xl font-bold text-gray-900 hover:text-blue-600 transition">
-                      <span className="text-2xl mr-2">🔐</span>
-                      관리자 패널
-                    </Link>
-                    <div className="hidden sm:ml-8 sm:flex sm:space-x-4">
-                      <Link
-                        href={adminBase}
-                        className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition ${
-                          pathname === adminBase
-                            ? 'bg-blue-50 text-blue-600 border border-blue-200'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                        }`}
-                      >
-                        📝 글 목록
-                      </Link>
-                      <Link
-                        href={`${adminBase}/new`}
-                        className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition ${
-                          pathname === `${adminBase}/new`
-                            ? 'bg-blue-50 text-blue-600 border border-blue-200'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                        }`}
-                      >
-                        ✏️ 새 글 작성
-                      </Link>
-                    </div>
-                  </>
-                )
-              })()}
+              <>
+                <Link href="/ko/admin" className="flex items-center px-3 py-2 text-xl font-bold text-gray-900 hover:text-blue-600 transition">
+                  <span className="text-2xl mr-2">🔐</span>
+                  관리자 패널
+                </Link>
+                <div className="hidden sm:ml-8 sm:flex sm:space-x-4">
+                  <Link
+                    href="/ko/admin"
+                    className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition ${
+                      pathname === '/ko/admin'
+                        ? 'bg-blue-50 text-blue-600 border border-blue-200'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    }`}
+                  >
+                    📝 글 목록
+                  </Link>
+                  <Link
+                    href="/ko/admin/new"
+                    className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition ${
+                      pathname === '/ko/admin/new'
+                        ? 'bg-blue-50 text-blue-600 border border-blue-200'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    }`}
+                  >
+                    ✏️ 새 글 작성
+                  </Link>
+                </div>
+              </>
             </div>
             <div className="flex items-center space-x-3">
               <Link
