@@ -29,13 +29,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // 루트 경로는 /ja로 리다이렉트 (app/page.tsx가 없으므로)
-  if (pathname === '/') {
-    const url = request.nextUrl.clone()
-    url.pathname = '/ja'
-    return NextResponse.redirect(url)
-  }
-
+  // 루트 경로는 matcher에서 제외되므로 여기 도달하지 않음
   // 이미 locale prefix가 있으면 통과
   if (
     pathname === '/ja' ||
@@ -55,8 +49,8 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // 정적 파일을 matcher 단계에서 완전히 제외
-  // Next.js matcher는 정규식이 아니라 glob 패턴을 사용
+  // 정적 파일과 루트 경로를 matcher 단계에서 완전히 제외
+  // 루트 경로는 next.config.js의 redirects로 처리
   matcher: [
     /*
      * Match all request paths except for:
@@ -64,8 +58,9 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon files
+     * - root path (/)
      * - files with extensions (images, fonts, etc.)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|favicon.png|.*\\..*).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|favicon.png|^/$|.*\\..*).*)',
   ],
 }

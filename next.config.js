@@ -15,8 +15,17 @@ const nextConfig = {
   experimental: {
     // Edge Runtime 안정성 향상
   },
-  // favicon 요청 리다이렉트 설정 제거 - redirects가 Edge Runtime에서 문제를 일으킬 수 있음
-  // 대신 public 폴더에 파일이 있으면 자동으로 서빙됨
+  // 루트 경로를 /ja로 리다이렉트 (middleware에서 처리하면 __dirname 에러 발생)
+  // redirects는 Edge Runtime에서 안전하게 처리됨
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/ja',
+        permanent: false,
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig

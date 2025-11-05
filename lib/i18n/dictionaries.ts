@@ -13,13 +13,13 @@ import { type Locale } from './config'
 // 언어별 JSON 파일을 직접 정적 import
 // ⚠️ 중요: public 폴더는 정적 파일 서빙용이므로 import하면 안 됩니다.
 // 대신 프로젝트 루트의 locales 폴더를 사용합니다.
-// 상대 경로를 사용하여 빌드 시 경로 해석 문제를 방지합니다.
+// @/ alias를 사용하여 tsconfig.json의 paths 설정을 활용합니다.
 // Next.js가 빌드 시 이 파일들을 적절하게 처리하고,
 // __dirname이나 fs 모듈에 의존하지 않게 됩니다.
 const dictionaries = {
-  ja: () => import('../../locales/ja/common.json').then((module) => module.default),
-  en: () => import('../../locales/en/common.json').then((module) => module.default),
-  ko: () => import('../../locales/ko/common.json').then((module) => module.default),
+  ja: () => import('@/locales/ja/common.json').then((module) => module.default),
+  en: () => import('@/locales/en/common.json').then((module) => module.default),
+  ko: () => import('@/locales/ko/common.json').then((module) => module.default),
 }
 
 // Dictionary 타입 정의 (타입 안정성 향상)
