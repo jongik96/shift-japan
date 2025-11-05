@@ -1,5 +1,7 @@
 import { MetadataRoute } from 'next'
-import { locales } from '@/lib/i18n/config'
+
+// Edge Runtime 안전: config에서 import하지 않고 직접 정의
+const locales = ['ja', 'en', 'ko']
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://shiftjapaninsight.com'

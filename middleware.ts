@@ -29,10 +29,43 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // 나머지만 middleware 처리
-  return NextResponse.next()
+  // 루트 경로는 /ja로 리다이렉트 (app/page.tsx가 없으므로)
+  if (pathname === '/') {
+    const url = request.nextUrl.clone()
+    url.pathname = '/ja'
+    return NextResponse.redirect(url)
+  }
+
+  // 이미 locale prefix가 있으면 통과
+  if (
+    pathname === '/ja' ||
+    pathname === '/en' ||
+    pathname === '/ko' ||
+    pathname.startsWith('/ja/') ||
+    pathname.startsWith('/en/') ||
+    pathname.startsWith('/ko/')
+  ) {
+    return NextResponse.next()
+  }
+
+  // locale prefix가 없는 경로는 /ja로 리다이렉트
+  const url = request.nextUrl.clone()
+  url.pathname = `/ja${pathname}`
+  return NextResponse.redirect(url)
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image).*)'],
+  // 정적 파일을 matcher 단계에서 완전히 제외
+  // Next.js matcher는 정규식이 아니라 glob 패턴을 사용
+  matcher: [
+    /*
+     * Match all request paths except for:
+     * - api routes
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon files
+     * - files with extensions (images, fonts, etc.)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico|favicon.png|.*\\..*).*)',
+  ],
 }
