@@ -9,10 +9,30 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  // 아무것도 하지 않고 요청을 다음 단계로 통과시킵니다.
+  const { pathname } = request.nextUrl
+
+  // 정적 파일 확장자 체크 - Edge Runtime 안전한 방식
+  const staticExtensions = ['.ico', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp', '.woff', '.woff2', '.ttf', '.eot', '.json', '.xml', '.txt']
+  const hasStaticExtension = staticExtensions.some(ext => pathname.endsWith(ext))
+  
+  // 정적 파일, API, Next.js 내부 경로는 즉시 통과
+  if (
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/.well-known') ||
+    hasStaticExtension ||
+    pathname === '/favicon.ico' ||
+    pathname === '/favicon.png' ||
+    pathname.includes('/shiftjapan-favi') ||
+    pathname.includes('/shiftjapan-og')
+  ) {
+    return NextResponse.next()
+  }
+
+  // 나머지만 middleware 처리
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!api|_next/static|_next/image).*)'],
 }
