@@ -29,7 +29,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // 루트 경로는 matcher에서 제외되므로 여기 도달하지 않음
+  // 루트 경로는 app/page.tsx에서 처리하므로 통과
+  if (pathname === '/') {
+    return NextResponse.next()
+  }
+
   // 이미 locale prefix가 있으면 통과
   if (
     pathname === '/ja' ||
@@ -50,7 +54,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   // 정적 파일과 루트 경로를 matcher 단계에서 완전히 제외
-  // 루트 경로는 next.config.js의 redirects로 처리
+  // 루트 경로(/)는 app/page.tsx에서 처리
   matcher: [
     /*
      * Match all request paths except for:

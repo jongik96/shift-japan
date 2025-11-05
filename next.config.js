@@ -15,17 +15,8 @@ const nextConfig = {
   experimental: {
     // Edge Runtime 안정성 향상
   },
-  // 루트 경로를 /ja로 리다이렉트 (middleware에서 처리하면 __dirname 에러 발생)
-  // redirects는 Edge Runtime에서 안전하게 처리됨
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/ja',
-        permanent: false,
-      },
-    ]
-  },
+  // redirects 함수 제거 - Next.js 14.0.4에서 Edge Runtime 처리 시 __dirname 사용 가능성
+  // 대신 app/page.tsx에서 클라이언트 리다이렉트 사용
 }
 
 module.exports = nextConfig
