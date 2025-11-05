@@ -164,9 +164,13 @@ export default function ContentRenderer({ blocks, onHeadingRender }: ContentRend
       
       case 'paragraph':
         // Check if paragraph contains only a URL (for link preview cards)
-        // Use trimEnd() to preserve leading/trailing newlines but remove trailing spaces
         const text = block.content.text || ''
         const trimmedForUrlCheck = text.trim()
+        
+        // Early return for empty text
+        if (!trimmedForUrlCheck) {
+          return null
+        }
         
         // Check for standalone URL - 더 강력한 패턴 매칭
         const urlPattern = /^https?:\/\/[^\s]+$/i
@@ -178,20 +182,28 @@ export default function ContentRenderer({ blocks, onHeadingRender }: ContentRend
         const isMarkdownLink = markdownLinkMatch !== null && 
           (markdownLinkMatch[2].startsWith('http://') || markdownLinkMatch[2].startsWith('https://'))
         
-        // Debug: Log URL detection (디버깅 활성화)
-        console.log('🔍 Paragraph block URL 감지:', {
-          original: JSON.stringify(block.content.text),
-          text: text,
-          trimmed: trimmedForUrlCheck,
-          isStandaloneUrl,
-          isMarkdownLink,
-          markdownLinkMatch,
-          urlPatternTest: urlPattern.test(trimmedForUrlCheck)
-        })
+        // URL이 감지되면 LinkPreviewCard로 렌더링 (early return)
+        if (isStandaloneUrl || (trimmedForUrlCheck.startsWith('http://') || trimmedForUrlCheck.startsWith('https://'))) {
+          const urlToUse = isStandaloneUrl ? trimmedForUrlCheck : trimmedForUrlCheck
+          return (
+            <div key={`paragraph-url-${index}`} className="mb-6">
+              <LinkPreviewCard href={urlToUse}>{urlToUse}</LinkPreviewCard>
+            </div>
+          )
+        }
+        
+        // Markdown link format 처리
+        if (isMarkdownLink && markdownLinkMatch) {
+          const linkText = markdownLinkMatch[1]
+          const linkUrl = markdownLinkMatch[2]
+          return (
+            <div key={`paragraph-mdlink-${index}`} className="mb-6">
+              <LinkPreviewCard href={linkUrl}>{linkText}</LinkPreviewCard>
+            </div>
+          )
+        }
         
         // Check if text contains markdown table
-        // Table pattern: has pipe characters, separator row with dashes/colons, and data rows
-        // Also handle tables that may have been saved without proper line breaks (e.g., "| a | b | |---|---|")
         const hasPipeChars = /\|.+\|/.test(text)
         const hasTableSeparator = /\|[\s\-:]+\|/.test(text)
         const hasTablePattern = hasPipeChars && hasTableSeparator
@@ -199,64 +211,18 @@ export default function ContentRenderer({ blocks, onHeadingRender }: ContentRend
         // If table pattern detected, ensure proper formatting
         let tableText = text
         if (hasTablePattern) {
-          // Check if table is on one line (needs fixing)
           const hasNewlines = text.includes('\n')
           
           if (!hasNewlines || (text.match(/\n/g) || []).length < 2) {
-            // Table is on one line or has very few line breaks - need to split rows
-            // Pattern example: "| col1 | col2 | |---|---| | data1 | data2 |"
-            // Each row ends with "|" and next row starts with "|"
-            // Rows are separated by one or more spaces
-            
-            // Method: Find all "| ... |" patterns and split by spaces followed by "|"
-            // First, normalize spaces around pipes
             tableText = text.trim()
-            
-            // Split by pattern: "|" followed by content, then "|", then space(s), then "|"
-            // This pattern: (\|[^|]+\|) followed by space and then (\|)
-            // More aggressive: split where we have "| ... |" followed by space and "|"
-            const parts: string[] = []
-            let currentRow = ''
-            let inCell = false
-            
-            // Split table rows: the key is finding row boundaries
-            // Each row is: | cell1 | cell2 | cell3 |
-            // Rows are separated by one or more spaces between the closing | and opening |
-            // Pattern: "| ... |" (complete row) followed by space(s) and "|" (start of next row)
-            
-            // More robust: find complete table rows by matching pipe patterns
-            // A complete row has at least 2 pipes (start and end, possibly more for multiple cells)
-            // Split at: "|" followed by space(s) followed by "|" (but only at row boundaries)
-            
-            // Strategy: Replace "|" followed by space(s) and "|" with "|\n|"
-            // But only if it looks like a row boundary (not inside a single row)
-            // A row boundary is: row ending "|" + space + row starting "|"
-            
-            // Split table rows - rows are complete "| ... |" patterns separated by spaces
-            // The challenge: distinguish between row separators and cell content
-            
-            // Strategy: Look for complete rows (contain at least 2 pipes) followed by space and another row
-            // Pattern: "| cell1 | cell2 | ... |" (complete row) followed by space(s) and "|" (next row start)
-            
-            // More aggressive: Split where we see "|" (potential row end) followed by space and "|" (next row start)
-            // But only if there's already a "|" before it (it's part of a row)
-            tableText = tableText
-              // First, find complete rows ending with "|" and split before next row starting with "|"
-              // Pattern: Any "| ... |" (with content between pipes) followed by space and "|"
-              // This matches: "| col1 | col2 |" + space + "|" (next row)
               .replace(/(\|[^|\n]+?\|)\s+(?=\|)/g, '$1\n')
-              // Also handle the reverse: "|" at end, space, then "|" (but with content before)
-              // This is a fallback for cases where the first pattern didn't match
               .replace(/(\|[^|\n]+\|)\s+(?=\|[^|\n])/g, '$1\n')
-              // Clean up any double splits
               .replace(/\n\n+/g, '\n')
-            
-            // Clean up: ensure each row is properly formatted
+              
             tableText = tableText
               .split('\n')
               .map((line: string) => {
                 line = line.trim()
-                // Ensure row starts and ends with |
                 if (line && !line.startsWith('|')) {
                   line = '| ' + line
                 }
@@ -268,135 +234,27 @@ export default function ContentRenderer({ blocks, onHeadingRender }: ContentRend
               .filter((line: string) => line.length > 0)
               .join('\n')
           } else {
-            // Table has line breaks but individual lines might have multiple rows merged
-            // Example: "| col1 | col2 | |---|---|" (header and separator on same line)
-            // Need to split rows within each line
             tableText = text
               .split('\n')
               .map((line: string) => {
                 line = line.trim()
-                // If line contains multiple rows (pattern: "| ... |" + space + "|")
-                // Split them
                 if (/(\|[^|\n]+\|)\s+(?=\|)/.test(line)) {
-                  // This line has multiple rows, split them
                   return line.replace(/(\|[^|\n]+\|)\s+(?=\|)/g, '$1\n')
                 }
                 return line
               })
               .join('\n')
-              // Split again in case we created new rows, then clean up
               .split('\n')
               .map((line: string) => line.trim())
               .filter((line: string) => line.length > 0 && line.includes('|'))
               .join('\n')
           }
           
-          // Final cleanup
           tableText = tableText.trim()
         }
         
-        // Common markdown components
-        const markdownComponents = {
-          p: ({node, ...props}: any) => <p className="mb-4 text-gray-900" {...props} />,
-          strong: ({node, ...props}: any) => <strong className="font-bold text-gray-900" {...props} />,
-          em: ({node, ...props}: any) => <em className="italic text-gray-900" {...props} />,
-          code: ({node, inline, ...props}: any) => 
-            inline ? (
-              <code className="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-gray-900" {...props} />
-            ) : (
-              <code className="block bg-gray-100 p-4 rounded-lg text-sm font-mono overflow-x-auto text-gray-900" {...props} />
-            ),
-          ul: ({node, ...props}: any) => <ul className="list-disc list-inside mb-4 space-y-2 text-gray-900" {...props} />,
-          ol: ({node, ...props}: any) => <ol className="list-decimal list-inside mb-4 space-y-2 text-gray-900" {...props} />,
-          li: ({node, ...props}: any) => <li className="ml-4 text-gray-900" {...props} />,
-          a: ({node, href, children, ...props}: any) => {
-            const isStandaloneLink = node.parent?.type === 'paragraph' && 
-              node.parent?.children?.length === 1 && 
-              node.parent?.children[0]?.type === 'link'
-            
-            if (isStandaloneLink && href && (href.startsWith('http://') || href.startsWith('https://'))) {
-              return <LinkPreviewCard key={href} href={href}>{children}</LinkPreviewCard>
-            }
-            
-            return (
-              <a 
-                className="text-blue-600 hover:text-blue-800 underline" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                href={href}
-                {...props}
-              >
-                {children}
-              </a>
-            )
-          },
-          blockquote: ({node, ...props}: any) => (
-            <blockquote className="border-l-4 border-blue-500 pl-4 italic my-4 text-gray-900" {...props} />
-          ),
-          h1: ({node, ...props}: any) => <h1 className="text-3xl font-bold mt-8 mb-4 text-gray-900" {...props} />,
-          h2: ({node, ...props}: any) => <h2 className="text-2xl font-bold mt-6 mb-3 text-gray-900" {...props} />,
-          h3: ({node, ...props}: any) => <h3 className="text-xl font-bold mt-4 mb-2 text-gray-900" {...props} />,
-          hr: ({node, ...props}: any) => <hr className="my-6 border-gray-300" {...props} />,
-          table: ({node, ...props}: any) => (
-            <div className="my-6 sm:my-8 overflow-x-auto">
-              <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm" {...props} />
-            </div>
-          ),
-          thead: ({node, ...props}: any) => (
-            <thead className="bg-gray-50" {...props} />
-          ),
-          tbody: ({node, ...props}: any) => (
-            <tbody className="divide-y divide-gray-200" {...props} />
-          ),
-          tr: ({node, ...props}: any) => (
-            <tr className="hover:bg-gray-50 transition" {...props} />
-          ),
-          th: ({node, ...props}: any) => (
-            <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider border-b" {...props} />
-          ),
-          td: ({node, ...props}: any) => (
-            <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-900" {...props} />
-          ),
-        }
-        
-        // If it's a standalone URL or markdown link, show as link preview card
-        if (isStandaloneUrl) {
-          // Use trimmed URL for href to ensure clean URL
-          const cleanUrl = trimmedForUrlCheck
-          console.log('✅ Standalone URL 감지됨, LinkPreviewCard 렌더링:', cleanUrl)
-          return (
-            <div key={index} className="mb-6">
-              <LinkPreviewCard href={cleanUrl}>{cleanUrl}</LinkPreviewCard>
-            </div>
-          )
-        }
-        
-        // If it's a markdown link format, show as preview card
-        if (isMarkdownLink && markdownLinkMatch) {
-          const linkText = markdownLinkMatch[1]
-          const linkUrl = markdownLinkMatch[2]
-          console.log('✅ Markdown link 감지됨, LinkPreviewCard 렌더링:', linkUrl)
-          return (
-            <div key={index} className="mb-6">
-              <LinkPreviewCard href={linkUrl}>{linkText}</LinkPreviewCard>
-            </div>
-          )
-        }
-        
-        // URL이 감지되지 않았지만, 텍스트가 URL처럼 보이면 강제로 체크
-        if (trimmedForUrlCheck && (trimmedForUrlCheck.startsWith('http://') || trimmedForUrlCheck.startsWith('https://'))) {
-          console.log('⚠️ URL 패턴이지만 감지되지 않음, 강제로 LinkPreviewCard 렌더링:', trimmedForUrlCheck)
-          return (
-            <div key={index} className="mb-6">
-              <LinkPreviewCard href={trimmedForUrlCheck}>{trimmedForUrlCheck}</LinkPreviewCard>
-            </div>
-          )
-        }
-        
         // Render all paragraph content as markdown (including tables)
-        // ReactMarkdown with remarkGfm will handle tables correctly
-        // For tables, ensure proper line breaks are preserved
-        const contentToRender = hasTablePattern ? tableText : block.content.text
+        const contentToRender = hasTablePattern ? tableText : text
         return (
           <div key={index} className="mb-6 text-gray-900 leading-relaxed">
             <ReactMarkdown 
