@@ -13,14 +13,7 @@ const nextConfig = {
   trailingSlash: false,
   // Ensure proper routing
   reactStrictMode: true,
-  // Edge Runtime 호환성: webpack 설정으로 JSON 파일 처리 최적화
-  webpack: (config) => {
-    config.resolve.extensionAlias = {
-      '.js': ['.ts', '.tsx', '.js', '.jsx'],
-      '.json': ['.json'],
-    }
-    return config
-  },
+  // Edge Runtime 호환성: webpack 설정 제거 (Edge Runtime과 충돌 가능)
 }
 
 module.exports = nextConfig

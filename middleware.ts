@@ -99,7 +99,16 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   // 정적 파일 확장자 및 시스템 경로 제외
+  // Edge Runtime 호환을 위해 단순한 패턴 사용
   matcher: [
-    '/((?!api|_next|\\.well-known|.*\\.(?:png|jpg|jpeg|gif|svg|ico|woff2?|ttf|eot)$).*)',
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - 이미지, 폰트 등 정적 파일 확장자
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot)$).*)',
   ],
 }
