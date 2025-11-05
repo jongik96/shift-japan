@@ -80,7 +80,7 @@ export default function Header() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-8">
             <Link
-              href={getLocalizedPath(locale)}
+              href={`/${locale}`}
               className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
             >
               {dictionary.nav.blog}
@@ -162,7 +162,7 @@ export default function Header() {
         {isMenuOpen && (
           <div className="md:hidden pb-4">
             <Link
-              href={getLocalizedPath(locale)}
+              href={`/${locale}`}
               className="block text-gray-700 hover:text-blue-600 px-3 py-2 text-base font-medium"
             >
               {dictionary.nav.blog}
