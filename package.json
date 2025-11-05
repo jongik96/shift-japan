@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
+    "prebuild": "echo '=== Build 시작: __dirname 검사 ===' && node -e \"try { console.log('__dirname:', typeof __dirname); console.log('__dirname 값:', typeof __dirname !== 'undefined' ? __dirname : 'undefined'); } catch(e) { console.log('__dirname 없음:', e.message); }\"",
     "build": "next build",
+    "postbuild": "echo '=== Build 완료 ==='",
     "start": "next start",
     "lint": "next lint"
   },

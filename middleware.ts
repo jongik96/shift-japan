@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
+// 빌드 시 __dirname 체크 (Edge Runtime에서는 undefined여야 함)
+if (typeof __dirname !== 'undefined') {
+  console.error('⚠️ WARNING: __dirname이 middleware에서 사용 가능합니다!')
+  console.error('__dirname 값:', __dirname)
+}
+
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
