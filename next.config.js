@@ -9,11 +9,12 @@ const nextConfig = {
       },
     ],
   },
-  // Ensure trailing slash is handled correctly for Vercel
   trailingSlash: false,
-  // Ensure proper routing
   reactStrictMode: true,
-  // Edge Runtime 호환성: webpack 설정 제거 (Edge Runtime과 충돌 가능)
+  // Edge Runtime 최적화
+  experimental: {
+    // Edge Runtime 안정성 향상
+  },
 }
 
 module.exports = nextConfig
