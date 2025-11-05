@@ -116,6 +116,13 @@
     "ja": "日本語",
     "en": "English",
     "ko": "한국어"
+  },
+  "share": {
+    "title": "Share",
+    "copyLink": "Copy Link",
+    "copied": "Copied",
+    "twitter": "Twitter",
+    "quoteSelection": "Quote Selection"
   }
 }
 

@@ -255,6 +255,14 @@ export default function ContentRenderer({ blocks, onHeadingRender }: ContentRend
         
         // Render all paragraph content as markdown (including tables)
         const contentToRender = hasTablePattern ? tableText : text
+        
+        // 디버깅: 마크다운 텍스트 확인
+        console.log('📄 Paragraph 렌더링:', {
+          text: text.substring(0, 100),
+          hasBold: text.includes('**'),
+          boldMatches: text.match(/\*\*[^*]+\*\*/g)
+        })
+        
         return (
           <div key={index} className="mb-6 text-gray-900 leading-relaxed">
             <ReactMarkdown 
@@ -281,8 +289,8 @@ export default function ContentRenderer({ blocks, onHeadingRender }: ContentRend
                   // Regular paragraph
                   return <p className="mb-4 text-gray-900" {...props}>{children}</p>
                 },
-                strong: ({node, ...props}) => <strong className="font-bold text-gray-900" {...props} />,
-                em: ({node, ...props}) => <em className="italic text-gray-900" {...props} />,
+                strong: ({node, children, ...props}: any) => <strong className="font-bold text-gray-900" {...props}>{children}</strong>,
+                em: ({node, children, ...props}: any) => <em className="italic text-gray-900" {...props}>{children}</em>,
                 code: ({node, inline, ...props}: any) => 
                   inline ? (
                     <code className="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-gray-900" {...props} />

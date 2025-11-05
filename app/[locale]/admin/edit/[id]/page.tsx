@@ -156,8 +156,46 @@ export default function EditPostPage() {
         // codemirror가 준비될 때까지 대기 후 이벤트 리스너 등록
         const setupChangeListener = () => {
           if (editor.codemirror) {
+            // URL 입력 시 한글 입력기 비활성화를 위한 설정
+            const cm = editor.codemirror
+            
+            // 변경 이벤트 리스너 - URL 패턴 자동 수정
             editor.codemirror.on('change', () => {
-              setMarkdownContent(editor.value())
+              const value = editor.value()
+              // URL 패턴에서 한글 자모를 영문으로 자동 변환
+              const fixedValue = value.replace(/https?:\/\/[^\s]+/gi, (url) => {
+                // 한글 자모를 영문으로 변환 (특히 /ko, /en, /ja 같은 패턴)
+                let fixed = url
+                // /ㅏ -> /ko (한글 입력기에서 'ko' 입력 시 'ㅏ'로 변환되는 경우)
+                fixed = fixed.replace(/\/ㅏ(\/|$|\s|$)/g, '/ko$1')
+                fixed = fixed.replace(/\/ㅐ(\/|$|\s|$)/g, '/en$1')
+                fixed = fixed.replace(/\/ㅓ(\/|$|\s|$)/g, '/ja$1')
+                // URL 내 한글 자모를 영문으로 변환 (한글 입력기 오타 보정)
+                fixed = fixed.replace(/[ㄱ-ㅎㅏ-ㅣ]/g, (char) => {
+                  const map: Record<string, string> = {
+                    'ㅏ': 'o', 'ㅐ': 'e', 'ㅓ': 'u', 'ㅔ': 'i', 'ㅗ': 'h',
+                    'ㅜ': 'n', 'ㅡ': 'm', 'ㅣ': 'l', 'ㄱ': 'r', 'ㄴ': 's',
+                    'ㄷ': 'e', 'ㄹ': 'f', 'ㅁ': 'a', 'ㅂ': 'q', 'ㅅ': 't',
+                    'ㅇ': 'd', 'ㅈ': 'w', 'ㅊ': 'c', 'ㅋ': 'z', 'ㅌ': 'x',
+                    'ㅍ': 'v', 'ㅎ': 'g'
+                  }
+                  return map[char] || char
+                })
+                if (fixed !== url) {
+                  console.log('🔧 URL 자동 수정:', { original: url, fixed })
+                  // 현재 커서 위치 저장
+                  const cursor = cm.getCursor()
+                  // URL 수정
+                  const currentValue = cm.getValue()
+                  const newValue = currentValue.replace(url, fixed)
+                  cm.setValue(newValue)
+                  // 커서 위치 복원
+                  cm.setCursor(cursor)
+                  return fixed
+                }
+                return fixed
+              })
+              setMarkdownContent(fixedValue)
             })
           } else {
             // codemirror가 아직 준비되지 않았으면 잠시 후 다시 시도
@@ -312,10 +350,19 @@ export default function EditPostPage() {
           })
           currentParagraph = ''
         }
+        // URL 디버깅 및 인코딩 보존
+        const urlToStore = trimmedLine
+        console.log('🔗 URL 저장:', {
+          original: line,
+          trimmed: trimmedLine,
+          urlToStore,
+          charCodes: Array.from(urlToStore).map(c => c.charCodeAt(0)),
+          bytes: new TextEncoder().encode(urlToStore)
+        })
         // URL만 있는 paragraph로 저장 (ContentRenderer에서 감지 가능하도록)
         blocks.push({
           type: 'paragraph',
-          content: { text: trimmedLine }
+          content: { text: urlToStore }
         })
       }
       // 마크다운 링크 형식만 있는 줄
@@ -412,14 +459,44 @@ export default function EditPostPage() {
       let finalMarkdownContent = markdownContent
       if (easyMDE) {
         finalMarkdownContent = easyMDE.value()
-        console.log('EasyMDE에서 가져온 마크다운:', finalMarkdownContent.substring(0, 200) + '...')
+        console.log('📝 EasyMDE 원본 값:', {
+          value: finalMarkdownContent.substring(0, 200),
+          length: finalMarkdownContent.length,
+          charCodes: Array.from(finalMarkdownContent.substring(0, 100)).map(c => c.charCodeAt(0)),
+          hasKo: finalMarkdownContent.includes('/ko'),
+          hasKoCharCodes: finalMarkdownContent.match(/\/ko/)?.[0] ? Array.from(finalMarkdownContent.match(/\/ko/)?.[0] || '').map(c => c.charCodeAt(0)) : null
+        })
         setMarkdownContent(finalMarkdownContent) // state도 업데이트
       } else {
         console.warn('⚠️ EasyMDE 에디터가 초기화되지 않았습니다. markdownContent state 사용:', markdownContent.substring(0, 200) + '...')
       }
 
+      // URL 패턴에서 한글 자모를 영문으로 정규화 (저장 전 최종 보정)
+      const normalizedMarkdown = finalMarkdownContent.replace(/https?:\/\/[^\s]+/gi, (url) => {
+        let fixed = url
+        // /ㅏ -> /ko (한글 입력기 오타 보정)
+        fixed = fixed.replace(/\/ㅏ(\/|$|\s|$)/g, '/ko$1')
+        fixed = fixed.replace(/\/ㅐ(\/|$|\s|$)/g, '/en$1')
+        fixed = fixed.replace(/\/ㅓ(\/|$|\s|$)/g, '/ja$1')
+        // URL 내 한글 자모를 영문으로 변환
+        fixed = fixed.replace(/[ㄱ-ㅎㅏ-ㅣ]/g, (char) => {
+          const map: Record<string, string> = {
+            'ㅏ': 'o', 'ㅐ': 'e', 'ㅓ': 'u', 'ㅔ': 'i', 'ㅗ': 'h',
+            'ㅜ': 'n', 'ㅡ': 'm', 'ㅣ': 'l', 'ㄱ': 'r', 'ㄴ': 's',
+            'ㄷ': 'e', 'ㄹ': 'f', 'ㅁ': 'a', 'ㅂ': 'q', 'ㅅ': 't',
+            'ㅇ': 'd', 'ㅈ': 'w', 'ㅊ': 'c', 'ㅋ': 'z', 'ㅌ': 'x',
+            'ㅍ': 'v', 'ㅎ': 'g'
+          }
+          return map[char] || char
+        })
+        if (fixed !== url) {
+          console.log('🔧 저장 전 URL 정규화:', { original: url, fixed })
+        }
+        return fixed
+      })
+
       // 마크다운을 ContentBlocks로 변환
-      const blocks = markdownToContentBlocks(finalMarkdownContent)
+      const blocks = markdownToContentBlocks(normalizedMarkdown)
       
       console.log('변환된 ContentBlocks:', blocks.map(b => ({
         type: b.type,
