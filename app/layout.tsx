@@ -1,7 +1,7 @@
 import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
-import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/react'
+import AdSenseInit from '@/components/AdSenseInit'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -73,26 +73,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={inter.className}>
-        {/* Google AdSense - Script를 먼저 로드 */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8843011911940029"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
-        {/* Google AdSense 초기화 코드 */}
-        <Script
-          id="adsbygoogle-init"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (adsbygoogle = window.adsbygoogle || []).push({
-                google_ad_client: "ca-pub-8843011911940029",
-                enable_page_level_ads: true
-              });
-            `,
-          }}
-        />
+        <AdSenseInit />
         {children}
         <Analytics />
       </body>

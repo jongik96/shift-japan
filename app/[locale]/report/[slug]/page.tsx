@@ -10,6 +10,12 @@ import ReportClient from '@/components/ReportClient'
 // Node 런타임으로 명시 (Edge Runtime 호환성 문제 해결용)
 export const runtime = 'nodejs'
 
+// ISR 설정: 1시간마다 재생성 (새 글이 추가되어도 최대 1시간 내에 반영)
+export const revalidate = 3600
+
+// 동적 경로 허용: generateStaticParams에 없는 slug도 런타임에 동적으로 생성
+export const dynamicParams = true
+
 interface PageProps {
   params: { locale: string; slug: string }
 }
