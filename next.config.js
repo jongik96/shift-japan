@@ -27,7 +27,9 @@ const nextConfig = {
     // __dirname 사용을 감지하고 빌드 시 경고
     const originalEntry = config.entry
     config.entry = async () => {
-      const entries = await originalEntry()
+      const entries = typeof originalEntry === 'function' 
+        ? await originalEntry() 
+        : originalEntry
       console.log('=== Webpack Entry Points ===')
       console.log('Entries:', Object.keys(entries))
       return entries

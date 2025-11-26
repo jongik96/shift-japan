@@ -123,6 +123,43 @@
     "copied": "Copied",
     "twitter": "Twitter",
     "quoteSelection": "Quote Selection"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last Updated",
+    "intro": "Shift Japan Insight recognizes the importance of user privacy and strives to protect it.",
+    "adsense": {
+      "title": "Advertising",
+      "content": "We use third-party advertising services (Google AdSense). These advertising providers may use cookies (excluding your name, address, email address, and phone number) to display advertisements for products and services that match your interests."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "content": "We use Google Analytics to analyze traffic. Google Analytics uses cookies to collect traffic data. This data is collected anonymously and does not identify individuals."
+    },
+    "cookies": {
+      "title": "About Cookies",
+      "content": "We use cookies for some content. Cookies are information saved in your browser when you access the site, but they do not contain personal information such as your name or email address."
+    },
+    "disclaimer": {
+      "title": "Disclaimer",
+      "content": "We are not responsible for any information or services provided on other sites moved to from this site via links or banners."
+    }
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last Updated",
+    "intro": "These Terms of Service govern your use of the services provided by Shift Japan Insight on this website.",
+    "license": {
+      "title": "License",
+      "content": "The copyright of the content (text, images, data, etc.) on this site belongs to this site. Unauthorized reproduction, duplication, or sale beyond the scope of personal use is prohibited."
+    },
+    "disclaimer": {
+      "title": "Disclaimer",
+      "content": "We strive to post accurate information on this site, but incorrect information may be included or information may be outdated. Please note that we are not responsible for any damages caused by the content posted on this site."
+    },
+    "changes": {
+      "title": "Changes to Terms",
+      "content": "We may change these Terms at any time without notice to users if deemed necessary."
+    }
   }
 }
-
